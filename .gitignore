@@ -1,7 +1,7 @@
 /build
 /.vscode
 valgrind-out.txt
-/data/*.csv
+.DS_Store
 
 # Prerequisites
 *.d

@@ -1,6 +1,8 @@
 # Set the source files for the library
 set(SOURCE_FILES
     hello_openmp.cpp
+    vec3.cpp
+    vec4.cpp
     # Add more source files here
 )
 
