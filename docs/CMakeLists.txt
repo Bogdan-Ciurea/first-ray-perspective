@@ -1,0 +1,8 @@
+set(DOXYGEN_EXTRACT_ALL YES)
+set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
+
+SET(HEADERS "${PROJECT_SOURCE_DIR}/include/*.hpp")
+
+doxygen_add_docs(docs ${HEADERS} "${CMAKE_CURRENT_SOURCE_DIR}/mainpage.md"
+                 WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/include")
+
