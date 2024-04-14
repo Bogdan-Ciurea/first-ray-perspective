@@ -41,3 +41,24 @@ if (OPENMP_FOUND)
 else()
   message(STATUS "Not using OpenMP for parallelization")
 endif()
+
+# Add raylib
+FetchContent_Declare(
+    raylib
+    GIT_REPOSITORY git@github.com:raysan5/raylib.git
+    GIT_TAG 4.0.0
+)
+
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+
+message(STATUS "Fetching raylib")
+
+FetchContent_MakeAvailable(raylib)
+target_include_directories(raytracing-lib
+    PUBLIC
+    ${raylib_SOURCE_DIR}/src
+)
+
+target_link_libraries(raytracing-lib PUBLIC raylib)
