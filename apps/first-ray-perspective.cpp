@@ -1,11 +1,12 @@
 /**
  * @file first-ray-perspective.cpp
  * @author Bogdan Ciurea (ciureabogdanalexandru@gmail.com)
- * @brief This file is the main file for the neural networks project.
+ * @brief Implementing the first ray tracing algorithm with perspective
+ * projection
  * @version 0.1
- * @date 2023-07-04
+ * @date 2024-04-14
  *
- * @copyright Copyright (c) 2023
+ * @copyright Copyright (c) 2024
  *
  */
 
