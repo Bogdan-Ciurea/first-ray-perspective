@@ -9,7 +9,7 @@
  *
  */
 
-#include "vec4.hpp"
+#include "math/vec4.hpp"
 
 vec4::vec4() : e{0, 0, 0, 0} {}
 

@@ -10,35 +10,36 @@
  *
  */
 
-#include <iostream>
-
-#include "headers.hpp"
+#include "Window.hpp"
+#include "objects/Sphere.hpp"
+#include "raylib.h"
 
 int main() {
-  // Image
+  auto aspect_ratio = 16.0 / 9.0;
+  int screen_width = 1000;
 
-  int image_width = 256;
-  int image_height = 256;
+  // Calculate the image height, and ensure that it's at least 1.
+  int screen_height = int(screen_width / aspect_ratio);
+  screen_height = (screen_height < 1) ? 1 : screen_height;
 
-  // Render
+  // World
+  std::cout << "Creating world" << std::endl;
+  ObjectsList world = ObjectsList();
 
-  std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+  world.add(make_shared<Sphere>(vec3(0, 0, -1), 0.5));
+  world.add(make_shared<Sphere>(vec3(1, 0, -1), 0.5));
+  world.add(make_shared<Sphere>(vec3(0, -100.5, -1), 100));
 
-  for (int j = 0; j < image_height; ++j) {
-    std::clog << "\rScanlines remaining: " << (image_height - j) << ' '
-              << std::flush;
-    for (int i = 0; i < image_width; i++) {
-      auto r = double(i) / (image_width - 1);
-      auto g = double(j) / (image_height - 1);
-      auto b = 0.0;
+  RaytraceWindow window =
+      RaytraceWindow(screen_width, screen_height, "Raytracing");
 
-      int ir = int(255.999 * r);
-      int ig = int(255.999 * g);
-      int ib = int(255.999 * b);
+  window.set_world(world);
 
-      std::cout << ir << ' ' << ig << ' ' << ib << '\n';
-    }
-  }
+#ifdef USE_OPENMP
+  int nthreads = omp_get_num_threads();
+  std::cout << "Number of threads = " << nthreads << std::endl;
+#endif
+  window.draw();
 
-  std::clog << "\rDone.                 \n";
+  return 0;
 }

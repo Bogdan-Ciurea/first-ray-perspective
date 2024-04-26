@@ -1,9 +1,16 @@
 # Set the source files for the library
 set(SOURCE_FILES
     hello_openmp.cpp
-    vec3.cpp
-    vec4.cpp
+    math/vec3.cpp
+    math/vec4.cpp
+    math/mat4.cpp
+
     # Add more source files here
+    objects/ObjectsList.cpp
+    objects/Sphere.cpp
+
+    hit_record.cpp
+    Window.cpp
 )
 
 # Create the library

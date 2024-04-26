@@ -32,6 +32,7 @@ class vec4 {
   double x() const { return e[0]; }
   double y() const { return e[1]; }
   double z() const { return e[2]; }
+  double w() const { return e[3]; }
 
   double operator[](int i) const;
   bool operator==(const vec4& v) const;
@@ -62,5 +63,29 @@ class vec4 {
  public:
   double e[4];
 };
+
+inline vec4 operator*(double t, const vec4& v) {
+  return vec4(t * v.e[0], t * v.e[1], t * v.e[2], t * v.e[3]);
+}
+
+inline vec4 operator+(const vec4& u, const vec4& v) {
+  return vec4(u.e[0] + v.e[0], u.e[1] + v.e[1], u.e[2] + v.e[2],
+              u.e[3] + v.e[3]);
+}
+
+inline vec4 operator-(const vec4& u, const vec4& v) {
+  return vec4(u.e[0] - v.e[0], u.e[1] - v.e[1], u.e[2] - v.e[2],
+              u.e[3] - v.e[3]);
+}
+
+inline vec4 operator*(const vec4& u, const vec4& v) {
+  return vec4(u.e[0] * v.e[0], u.e[1] * v.e[1], u.e[2] * v.e[2],
+              u.e[3] * v.e[3]);
+}
+
+inline vec4 operator/(const vec4& u, const vec4& v) {
+  return vec4(u.e[0] / v.e[0], u.e[1] / v.e[1], u.e[2] / v.e[2],
+              u.e[3] / v.e[3]);
+}
 
 #endif  // VEC4_HPP

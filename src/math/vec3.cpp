@@ -9,7 +9,7 @@
  *
  */
 
-#include "vec3.hpp"
+#include "math/vec3.hpp"
 
 vec3::vec3() : e{0, 0, 0} {}
 
