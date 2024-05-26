@@ -34,10 +34,10 @@ inline Color operator+(const Color& c1, const Color& c2) {
 
 // Operator overloading for Color multiplication with a float
 inline Color operator*(float f, const Color& c) {
-  uchar r = (uchar)std::min((uint)(f * c.r), 255);
-  uchar g = (uchar)std::min((uint)(f * c.g), 255);
-  uchar b = (uchar)std::min((uint)(f * c.b), 255);
-  uchar a = (uchar)std::min((uint)(f * c.a), 255);
+  uchar r = (uchar)std::min((int)(f * c.r), 255);
+  uchar g = (uchar)std::min((int)(f * c.g), 255);
+  uchar b = (uchar)std::min((int)(f * c.b), 255);
+  uchar a = (uchar)std::min((int)(f * c.a), 255);
 
   return Color{r, g, b, a};
 }
@@ -100,9 +100,9 @@ inline vec3 operator/(const vec3& u, const vec3& v) {
 }
 
 inline Color operator+(const vec3& v, const Color& c) {
-  uchar r = std::min((uint)(v.x() + c.r), 255);
-  uchar g = std::min((uint)(v.y() + c.g), 255);
-  uchar b = std::min((uint)(v.z() + c.b), 255);
+  uchar r = std::min((int)(v.x() + c.r), 255);
+  uchar g = std::min((int)(v.y() + c.g), 255);
+  uchar b = std::min((int)(v.z() + c.b), 255);
 
   return Color{r, g, b, c.a};
 }

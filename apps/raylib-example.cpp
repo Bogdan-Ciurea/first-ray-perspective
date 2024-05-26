@@ -34,14 +34,14 @@ double hit_sphere(const vec3& center, double radius, const ray& r) {
 Color ray_color(const ray& r, ObjectsList& world) {
   hit_record rec;
   if (world.intersect(r, 0, infinity, rec)) {
-    return (Color){(uchar)(rec.normal.x() * 256), (uchar)(rec.normal.y() * 256),
+    return Color{(uchar)(rec.normal.x() * 256), (uchar)(rec.normal.y() * 256),
                    (uchar)(rec.normal.z() * 256)};
   }
 
   vec3 unit_direction = r.direction().unit_vector();
   auto a = 0.5 * (unit_direction.y() + 1.0);
-  return (1.0 - a) * (Color){(uchar)(256), (uchar)(256), (uchar)(256)} +
-         a * (Color){(uchar)(256 * 0.5), (uchar)(256 * 0.7), (uchar)(256)};
+  return (1.0 - a) * Color{(uchar)(256), (uchar)(256), (uchar)(256)} +
+         a * Color{(uchar)(256 * 0.5), (uchar)(256 * 0.7), (uchar)(256)};
 }
 
 int main() {
