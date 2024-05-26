@@ -22,43 +22,24 @@
 typedef unsigned int uint;
 typedef unsigned char uchar;
 
-// My own color class
-class MColor {
- public:
-  MColor() : r(0), g(0), b(0), a(255) {}
-  MColor(uchar r, uchar g, uchar b, uchar a) : r(r), g(g), b(b), a(a) {}
-  MColor(double r, double g, double b)
-      : r(abs(r * 255.999)), g(abs(g * 255.999)), b(abs(b * 255.999)), a(255) {}
-  MColor(double r, double g, double b, double a)
-      : r(abs(r * 255.999)),
-        g(abs(g * 255.999)),
-        b(abs(b * 255.999)),
-        a(abs(a * 255.999)) {}
+// Operator overloading for Color addition
+inline Color operator+(const Color& c1, const Color& c2) {
+  uchar r = std::min(c1.r + c2.r, 255);
+  uchar g = std::min(c1.g + c2.g, 255);
+  uchar b = std::min(c1.b + c2.b, 255);
+  uchar a = std::min(c1.a + c2.a, 255);
 
-  Color to_color() { return Color{r, g, b, a}; }
-
-  uchar r;
-  uchar g;
-  uchar b;
-  uchar a;
-};
-
-inline MColor operator+(const MColor& c1, const MColor& c2) {
-  uchar r = c1.r + c2.r > 255 ? 255 : c1.r + c2.r;
-  uchar g = c1.g + c2.g > 255 ? 255 : c1.g + c2.g;
-  uchar b = c1.b + c2.b > 255 ? 255 : c1.b + c2.b;
-  uchar a = c1.a + c2.a > 255 ? 255 : c1.a + c2.a;
-
-  return MColor(r, g, b, a);
+  return Color{r, g, b, a};
 }
 
-inline MColor operator*(const float f, const MColor& c) {
-  uchar r = f * c.r > 255 ? 255 : f * c.r;
-  uchar g = f * c.g > 255 ? 255 : f * c.g;
-  uchar b = f * c.b > 255 ? 255 : f * c.b;
-  uchar a = f * c.a > 255 ? 255 : f * c.a;
+// Operator overloading for Color multiplication with a float
+inline Color operator*(float f, const Color& c) {
+  uchar r = (uchar)std::min((uint)(f * c.r), 255);
+  uchar g = (uchar)std::min((uint)(f * c.g), 255);
+  uchar b = (uchar)std::min((uint)(f * c.b), 255);
+  uchar a = (uchar)std::min((uint)(f * c.a), 255);
 
-  return MColor(r, g, b, a);
+  return Color{r, g, b, a};
 }
 
 class vec3 {
@@ -118,12 +99,12 @@ inline vec3 operator/(const vec3& u, const vec3& v) {
   return vec3(u.e[0] / v.e[0], u.e[1] / v.e[1], u.e[2] / v.e[2]);
 }
 
-inline MColor operator+(const vec3, const MColor& c) {
-  uchar r = c.r + c.r > 255 ? 255 : c.r + c.r;
-  uchar g = c.g + c.g > 255 ? 255 : c.g + c.g;
-  uchar b = c.b + c.b > 255 ? 255 : c.b + c.b;
+inline Color operator+(const vec3& v, const Color& c) {
+  uchar r = std::min((uint)(v.x() + c.r), 255);
+  uchar g = std::min((uint)(v.y() + c.g), 255);
+  uchar b = std::min((uint)(v.z() + c.b), 255);
 
-  return MColor(r, g, b, c.a);
+  return Color{r, g, b, c.a};
 }
 
 #endif  // VEC3_HPP
