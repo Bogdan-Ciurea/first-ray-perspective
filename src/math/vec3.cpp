@@ -94,3 +94,22 @@ std::ostream& operator<<(std::ostream& out, const vec3& v) {
 std::istream& operator>>(std::istream& in, vec3& v) {
   return in >> v.e[0] >> v.e[1] >> v.e[2];
 }
+
+/**
+ * @brief Create a color object. Keep in mind that you might want to scale the
+ * color values by 255 when using this function.
+ *
+ * @param r  The red component
+ * @param g  The green component
+ * @param b  The blue component
+ * @param a  The alpha component
+ * @return Color  The color object
+ */
+Color create_color(int r, int g, int b, int a) {
+  r = clamp(abs(r), 0, 255);
+  g = clamp(abs(g), 0, 255);
+  b = clamp(abs(b), 0, 255);
+  a = clamp(abs(a), 0, 255);
+
+  return Color{(uchar)r, uchar(g), (uchar)b, (uchar)a};
+}

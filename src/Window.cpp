@@ -26,19 +26,9 @@ RaytraceWindow::~RaytraceWindow() {
   free(pixels);
 }
 
-Color create_color(int r, int g, int b, int a = 255) {
-  r = clamp(abs(r), 0, 255);
-  g = clamp(abs(g), 0, 255);
-  b = clamp(abs(b), 0, 255);
-  a = clamp(abs(a), 0, 255);
-
-  return Color{(uchar)r, uchar(g), (uchar)b, (uchar)a};
-}
-
-Color ray_color2(const ray& r, ObjectsList& world) {
+Color ray_color(const ray& r, ObjectsList& world) {
   hit_record rec;
   if (world.intersect(r, 0, infinity, rec)) {
-    // return create_color(rec.normal.x(), rec.normal.y(), rec.normal.z());
     return create_color(255 * rec.normal.x(), 255 * rec.normal.y(),
                         255 * rec.normal.z());
   }
@@ -47,17 +37,6 @@ Color ray_color2(const ray& r, ObjectsList& world) {
   auto a = 0.5 * (unit_direction.y() + 1.0);
   return (1.0 - a) * create_color(255, 255, 255) +
          a * create_color(255 * 0.5, 255 * 0.7, 255);
-}
-
-MColor ray_color(const ray& r, ObjectsList& world) {
-  hit_record rec;
-  if (world.intersect(r, 0, infinity, rec)) {
-    return MColor(rec.normal.x(), rec.normal.y(), rec.normal.z());
-  }
-
-  vec3 unit_direction = r.direction().unit_vector();
-  auto a = 0.5 * (unit_direction.y() + 1.0);
-  return (1.0 - a) * MColor(1.0, 1.0, 1.0) + a * MColor(0.5, 0.7, 1.0);
 }
 
 void RaytraceWindow::draw() {
@@ -100,10 +79,7 @@ void RaytraceWindow::draw() {
             pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
         auto ray_direction = pixel_center - camera_center;
         ray r(camera_center, ray_direction);
-
-        // Color pixel_color = ray_color(r, world).to_color();
-        Color pixel_color = ray_color2(r, world);
-        pixels[j * screen_width + i] = pixel_color;
+        pixels[j * screen_width + i] = ray_color(r, world);
       }
     }
 

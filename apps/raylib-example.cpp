@@ -14,8 +14,8 @@
 
 #include "objects/ObjectsList.hpp"
 #include "objects/Sphere.hpp"
+#include "ray.hpp"
 #include "raylib.h"
-#include "utils.hpp"
 
 double hit_sphere(const vec3& center, double radius, const ray& r) {
   vec3 oc = center - r.origin();
@@ -31,15 +31,17 @@ double hit_sphere(const vec3& center, double radius, const ray& r) {
   }
 }
 
-MColor ray_color(const ray& r, ObjectsList& world) {
+Color ray_color(const ray& r, ObjectsList& world) {
   hit_record rec;
   if (world.intersect(r, 0, infinity, rec)) {
-    return MColor(rec.normal.x(), rec.normal.y(), rec.normal.z());
+    return create_color(255 * rec.normal.x(), 255 * rec.normal.y(),
+                        255 * rec.normal.z());
   }
 
   vec3 unit_direction = r.direction().unit_vector();
   auto a = 0.5 * (unit_direction.y() + 1.0);
-  return (1.0 - a) * MColor(1.0, 1.0, 1.0) + a * MColor(0.5, 0.7, 1.0);
+  return (1.0 - a) * create_color(255, 255, 255) +
+         a * create_color(255 * 0.5, 255 * 0.7, 255);
 }
 
 int main() {
@@ -107,9 +109,7 @@ int main() {
         auto ray_direction = pixel_center - camera_center;
         ray r(camera_center, ray_direction);
 
-        Color pixel_color = ray_color(r, world).to_color();
-
-        DrawPixel(i, j, pixel_color);
+        DrawPixel(i, j, ray_color(r, world));
       }
     }
 
