@@ -12,7 +12,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "math/vec3.hpp"
+#include "math/mat4.hpp"
 
 class ray {
  public:

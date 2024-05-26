@@ -12,12 +12,8 @@
 #ifndef VEC3_HPP
 #define VEC3_HPP
 
-#include <math.h>
-
-#include <iostream>
-#include <limits>
-
 #include "raylib.h"
+#include "utils.hpp"
 
 typedef unsigned int uint;
 typedef unsigned char uchar;
@@ -59,6 +55,26 @@ inline MColor operator*(const float f, const MColor& c) {
   uchar a = f * c.a > 255 ? 255 : f * c.a;
 
   return MColor(r, g, b, a);
+}
+
+// Operator overloading for Color addition
+inline Color operator+(const Color& c1, const Color& c2) {
+  unsigned char r = (uchar)clamp(c1.r + c2.r, 0.0f, 255.0f);
+  unsigned char g = (uchar)clamp(c1.g + c2.g, 0.0f, 255.0f);
+  unsigned char b = (uchar)clamp(c1.b + c2.b, 0.0f, 255.0f);
+  unsigned char a = (uchar)clamp(c1.a + c2.a, 0.0f, 255.0f);
+
+  return Color{r, g, b, a};
+}
+
+// Operator overloading for Color multiplication with a float
+inline Color operator*(float f, const Color& c) {
+  unsigned char r = (uchar)clamp(f * c.r, 0.0f, 255.0f);
+  unsigned char g = (uchar)clamp(f * c.g, 0.0f, 255.0f);
+  unsigned char b = (uchar)clamp(f * c.b, 0.0f, 255.0f);
+  unsigned char a = (uchar)clamp(f * c.a, 0.0f, 255.0f);
+
+  return Color{r, g, b, a};
 }
 
 class vec3 {
@@ -124,6 +140,15 @@ inline MColor operator+(const vec3, const MColor& c) {
   uchar b = c.b + c.b > 255 ? 255 : c.b + c.b;
 
   return MColor(r, g, b, c.a);
+}
+
+inline Color operator+(const vec3, const Color& c) {
+  unsigned char r = (uchar)clamp(c.r, 0.0f, 255.0f);
+  unsigned char g = (uchar)clamp(c.g, 0.0f, 255.0f);
+  unsigned char b = (uchar)clamp(c.b, 0.0f, 255.0f);
+  unsigned char a = (uchar)clamp(c.a, 0.0f, 255.0f);
+
+  return Color{r, g, b, a};
 }
 
 #endif  // VEC3_HPP

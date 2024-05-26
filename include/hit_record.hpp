@@ -12,7 +12,7 @@
 #ifndef HIT_RECORD_HPP
 #define HIT_RECORD_HPP
 
-#include "utils.hpp"
+#include "ray.hpp"
 
 class hit_record {
  public:

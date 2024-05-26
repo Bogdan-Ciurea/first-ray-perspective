@@ -13,7 +13,7 @@
 #define OBJECTSLIST_HPP
 
 #include "Object.hpp"
-#include "utils.hpp"
+#include "ray.hpp"
 
 class ObjectsList : public Object {
  public:
