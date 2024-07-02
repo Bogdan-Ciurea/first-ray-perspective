@@ -26,17 +26,21 @@ RaytraceWindow::~RaytraceWindow() {
   free(pixels);
 }
 
+Color vec3_to_color(const vec3& v) {
+  return create_color(255.99 * v.x(), 255.99 * v.y(), 255.99 * v.z(), 255);
+}
+
 Color ray_color(const ray& r, ObjectsList& world) {
   hit_record rec;
   if (world.intersect(r, 0, infinity, rec)) {
-    return create_color(255 * rec.normal.x(), 255 * rec.normal.y(),
-                        255 * rec.normal.z());
+    return vec3_to_color(0.5f * vec3(rec.normal.x() + 1, rec.normal.y() + 1,
+                                     rec.normal.z() + 1));
   }
 
-  vec3 unit_direction = r.direction().unit_vector();
-  auto a = 0.5 * (unit_direction.y() + 1.0);
-  return (1.0 - a) * create_color(255, 255, 255) +
-         a * create_color(255 * 0.5, 255 * 0.7, 255);
+  vec3 unit_direction = unit_vector(r.direction());
+  float t = 0.5 * (unit_direction.y() + 1.0);
+  return vec3_to_color((float)(1.0 - t) * vec3(1.0, 1.0, 1.0) +
+                       t * vec3(0.5, 0.7, 1.0));
 }
 
 void RaytraceWindow::draw() {
@@ -60,7 +64,7 @@ void RaytraceWindow::draw() {
   auto viewport_upper_left = camera_center - vec3(0, 0, focal_length) -
                              viewport_u / 2 - viewport_v / 2;
   auto pixel00_loc =
-      viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+      viewport_upper_left + 0.5f * (pixel_delta_u + pixel_delta_v);
 
   while (!WindowShouldClose()) {
     begin_drawing();

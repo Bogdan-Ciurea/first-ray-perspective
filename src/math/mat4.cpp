@@ -184,7 +184,7 @@ mat4 mat4::rotate(float angle, const vec3& axis) {
   float c = cos(angle);
   float s = sin(angle);
   float t = 1 - c;
-  vec3 a = axis.unit_vector();
+  vec3 a = unit_vector(axis);
   result.coordinates[0][0] = t * a[0] * a[0] + c;
   result.coordinates[0][1] = t * a[0] * a[1] - s * a[2];
   result.coordinates[0][2] = t * a[0] * a[2] + s * a[1];

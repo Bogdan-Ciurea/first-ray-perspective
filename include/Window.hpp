@@ -15,7 +15,6 @@
 #include <omp.h>
 
 #include "objects/ObjectsList.hpp"
-#include "raylib.h"
 
 class RaytraceWindow {
  public:

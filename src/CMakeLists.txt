@@ -1,16 +1,15 @@
 # Set the source files for the library
 set(SOURCE_FILES
-    hello_openmp.cpp
-    math/vec3.cpp
-    math/vec4.cpp
-    math/mat4.cpp
+  math/vec3.cpp
+  math/vec4.cpp
+  math/mat4.cpp
 
-    # Add more source files here
-    objects/ObjectsList.cpp
-    objects/Sphere.cpp
+  # Add more source files here
+  objects/ObjectsList.cpp
+  objects/Sphere.cpp
 
-    hit_record.cpp
-    Window.cpp
+  hit_record.cpp
+  Window.cpp
 )
 
 # Create the library
@@ -21,8 +20,8 @@ target_compile_features(raytracing-lib PUBLIC cxx_std_14)
 
 # Include directories
 target_include_directories(raytracing-lib
-    PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/../include
+  PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/../include
 )
 
 # If you need OpenMP, include it here
@@ -51,9 +50,9 @@ endif()
 
 # Add raylib
 FetchContent_Declare(
-    raylib
-    GIT_REPOSITORY git@github.com:raysan5/raylib.git
-    GIT_TAG 4.0.0
+  raylib
+  GIT_REPOSITORY git@github.com:raysan5/raylib.git
+  GIT_TAG 4.0.0
 )
 
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -64,8 +63,8 @@ message(STATUS "Fetching raylib")
 
 FetchContent_MakeAvailable(raylib)
 target_include_directories(raytracing-lib
-    PUBLIC
-    ${raylib_SOURCE_DIR}/src
+  PUBLIC
+  ${raylib_SOURCE_DIR}/src
 )
 
 target_link_libraries(raytracing-lib PUBLIC raylib)

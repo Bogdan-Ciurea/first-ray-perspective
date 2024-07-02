@@ -14,6 +14,7 @@
 
 #include "Object.hpp"
 #include "ray.hpp"
+#include "utils.hpp"
 
 class ObjectsList : public Object {
  public:

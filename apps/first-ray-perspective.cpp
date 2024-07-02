@@ -12,7 +12,6 @@
 
 #include "Window.hpp"
 #include "objects/Sphere.hpp"
-#include "raylib.h"
 
 int main() {
   auto aspect_ratio = 16.0 / 9.0;

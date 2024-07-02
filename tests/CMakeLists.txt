@@ -14,7 +14,7 @@ SET(TEST_NAME test-${PROJECT_NAME})
 
 SET(TEST_SOURCES 
     # Add test files here
-    test_main.cpp
+    test_vec3.cpp
 )
 
 # Add the test executable
