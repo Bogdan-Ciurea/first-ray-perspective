@@ -25,15 +25,15 @@ class camera {
    * @brief Destroy the camera object
    *
    */
-  ~camera();
+  ~camera() {}
 
-  void render(ObjectsList& world);
+  Color send_ray(ObjectsList& world, const uint pixel_width,
+                 const uint pixel_height);
 
   double aspect_ratio = 1.0;  // Ratio of image width over height
   int screen_width = 100;     // Rendered image width in pixel count
 
  private:
-  Color* pixels;       // Pixel buffer
   int screen_height;   // Rendered image height
   vec3 center;         // Camera center
   vec3 pixel00_loc;    // Location of pixel 0, 0

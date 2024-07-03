@@ -16,15 +16,38 @@ RaytraceWindow::RaytraceWindow(int screen_width, int screen_height,
     : screen_width(screen_width), screen_height(screen_height) {
   InitWindow(screen_width, screen_height, title);
   SetTargetFPS(60);
+  pixels = new Color[screen_width * screen_height];
   cam = camera(screen_width, screen_height);
 }
 
 RaytraceWindow::~RaytraceWindow() {
-  cam.~camera();
-  CloseWindow();
+  // cam.~camera();
+  // CloseWindow();
+  // delete[] pixels;
 }
 
 void RaytraceWindow::draw() {
-  // Camera
-  cam.render(world);
+  while (!WindowShouldClose()) {
+    BeginDrawing();
+
+    // Clear the screen
+    ClearBackground(BLACK);
+
+// Calculate each pixel color
+// If we are using OpenMP, we can parallelize the loop
+#ifdef USE_OPENMP
+#pragma omp parallel for
+#endif
+    for (int j = 0; j < screen_height; j++) {
+      for (int i = 0; i < screen_width; i++)
+        pixels[j * screen_width + i] = cam.send_ray(world, i, j);
+    }
+
+    // Draw the pixels
+    for (int j = 0; j < screen_height; j++)
+      for (int i = 0; i < screen_width; i++)
+        DrawPixel(i, j, pixels[j * screen_width + i]);
+
+    EndDrawing();
+  }
 }

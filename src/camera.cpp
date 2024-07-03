@@ -8,50 +8,21 @@ camera::camera() {
   screen_height = 100;
   screen_width = 100;
   aspect_ratio = 1.0;
-  pixels = new Color[screen_width * screen_height];
   initialize();
 }
 camera::camera(int image_width, int screen_height)
     : screen_height(screen_height), screen_width(image_width) {
   aspect_ratio = double(screen_width) / screen_height;
-  pixels = new Color[screen_width * screen_height];
   initialize();
 }
 
-camera::~camera() { delete[] pixels; }
-
-void camera::render(ObjectsList& world) {
-  while (!WindowShouldClose()) {
-    BeginDrawing();
-
-    // Clear the screen
-    ClearBackground(BLACK);
-
-// Calculate each pixel color
-// If we are using OpenMP, we can parallelize the loop
-#ifdef USE_OPENMP
-#pragma omp parallel for
-#endif
-    for (int j = 0; j < screen_height; j++) {
-      for (int i = 0; i < screen_width; i++) {
-        auto pixel_center =
-            pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
-        auto ray_direction = pixel_center - center;
-        ray r(center, ray_direction);
-        pixels[j * screen_width + i] = ray_color(r, world);
-      }
-    }
-
-    // Draw the pixels
-    for (int j = 0; j < screen_height; j++) {
-      for (int i = 0; i < screen_width; i++) {
-        Color color = pixels[j * screen_width + i];
-        DrawPixel(i, j, color);
-      }
-    }
-
-    EndDrawing();
-  }
+Color camera::send_ray(ObjectsList& world, const uint pixel_width,
+                       const uint pixel_height) {
+  auto pixel_center = pixel00_loc + (pixel_width * pixel_delta_u) +
+                      (pixel_height * pixel_delta_v);
+  auto ray_direction = pixel_center - center;
+  ray r(center, ray_direction);
+  return ray_color(r, world);
 }
 
 Color camera::ray_color(const ray& r, ObjectsList& world) {

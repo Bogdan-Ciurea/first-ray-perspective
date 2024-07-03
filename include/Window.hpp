@@ -31,6 +31,7 @@ class RaytraceWindow {
   int screen_height;
   ObjectsList world;
   camera cam;
+  Color* pixels;
 };
 
 #endif  // WINDOW_HPP

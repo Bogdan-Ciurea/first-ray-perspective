@@ -34,10 +34,6 @@ int main() {
 
   window.set_world(world);
 
-#ifdef USE_OPENMP
-  int nthreads = omp_get_num_threads();
-  std::cout << "Number of threads = " << nthreads << std::endl;
-#endif
   window.draw();
 
   window.~RaytraceWindow();
