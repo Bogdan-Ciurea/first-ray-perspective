@@ -27,7 +27,7 @@ class camera {
    */
   ~camera() {}
 
-  Color send_ray(ObjectsList& world, const uint pixel_width,
+  Color send_ray(ObjectsList *world, const uint pixel_width,
                  const uint pixel_height);
 
   double aspect_ratio = 1.0;  // Ratio of image width over height
@@ -41,7 +41,7 @@ class camera {
   vec3 pixel_delta_v;  // Offset to pixel below
 
   void initialize();
-  Color ray_color(const ray& r, ObjectsList& world);
+  Color ray_color(const ray& r, ObjectsList *world);
 };
 
 #endif

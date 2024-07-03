@@ -24,12 +24,12 @@ class RaytraceWindow {
   ~RaytraceWindow();
 
   void draw();
-  void set_world(ObjectsList& world) { this->world = world; }
+  void set_world(ObjectsList *world) { this->world = world; }
 
  private:
   int screen_width;
   int screen_height;
-  ObjectsList world;
+  ObjectsList* world;
   camera cam;
   Color* pixels;
 };

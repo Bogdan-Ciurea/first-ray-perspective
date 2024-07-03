@@ -16,7 +16,7 @@ camera::camera(int image_width, int screen_height)
   initialize();
 }
 
-Color camera::send_ray(ObjectsList& world, const uint pixel_width,
+Color camera::send_ray(ObjectsList *world, const uint pixel_width,
                        const uint pixel_height) {
   auto pixel_center = pixel00_loc + (pixel_width * pixel_delta_u) +
                       (pixel_height * pixel_delta_v);
@@ -25,9 +25,9 @@ Color camera::send_ray(ObjectsList& world, const uint pixel_width,
   return ray_color(r, world);
 }
 
-Color camera::ray_color(const ray& r, ObjectsList& world) {
+Color camera::ray_color(const ray& r, ObjectsList *world) {
   hit_record rec;
-  if (world.intersect(r, 0, infinity, rec)) {
+  if (world->intersect(r, 0, infinity, rec)) {
     return vec3_to_color(0.5f * vec3(rec.normal.x() + 1, rec.normal.y() + 1,
                                      rec.normal.z() + 1));
   }

@@ -3,9 +3,6 @@
 ObjectsList::ObjectsList() {}
 
 ObjectsList::~ObjectsList() {
-  for (const auto& object : objects) {
-    object.~shared_ptr();
-  }
   objects.clear();
 }
 

@@ -21,9 +21,9 @@ RaytraceWindow::RaytraceWindow(int screen_width, int screen_height,
 }
 
 RaytraceWindow::~RaytraceWindow() {
-  // cam.~camera();
-  // CloseWindow();
-  // delete[] pixels;
+  //    CloseWindow();
+  //    cam.~camera();
+  //    delete[] pixels;
 }
 
 void RaytraceWindow::draw() {
@@ -50,4 +50,9 @@ void RaytraceWindow::draw() {
 
     EndDrawing();
   }
+
+  // Why it works here and not in the destructor, only God knows...
+  CloseWindow();
+  cam.~camera();
+  delete[] pixels;
 }
