@@ -12,7 +12,6 @@
 
 #include "Window.hpp"
 #include "objects/Sphere.hpp"
-#include "raylib.h"
 
 int main() {
   auto aspect_ratio = 16.0 / 9.0;
@@ -40,6 +39,9 @@ int main() {
   std::cout << "Number of threads = " << nthreads << std::endl;
 #endif
   window.draw();
+
+  window.~RaytraceWindow();
+  world.~ObjectsList();
 
   return 0;
 }

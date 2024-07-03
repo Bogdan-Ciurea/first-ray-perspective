@@ -12,7 +12,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "math/vec3.hpp"
+#include "math/mat4.hpp"
 
 class ray {
  public:
@@ -55,6 +55,22 @@ class ray {
  private:
   vec3 orig;
   vec3 dir;
+};
+
+class hit_record {
+ public:
+  vec3 p;
+  vec3 normal;
+  double t;
+  bool front_face;
+
+  /**
+   * @brief Set the face normal object
+   *
+   * @param r  The ray
+   * @param outward_normal  The outward normal
+   */
+  void set_face_normal(const ray& r, const vec3& outward_normal);
 };
 
 #endif

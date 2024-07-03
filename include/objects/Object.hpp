@@ -13,7 +13,6 @@
 #ifndef OBJECT_HPP
 #define OBJECT_HPP
 
-#include "hit_record.hpp"
 #include "ray.hpp"
 
 class Object {

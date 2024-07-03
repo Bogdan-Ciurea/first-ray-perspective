@@ -8,7 +8,8 @@ project(first-ray-perspective
     DESCRIPTION "FirstRayPerspective"
     LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -42,13 +43,16 @@ include(FetchContent)
 # The compiled library code is here
 add_subdirectory(src)
 
-# The executable code is here
-add_subdirectory(apps)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+  # The executable code is here
+  add_subdirectory(apps)
+endif()
 
 # Testing only available if this is the main app
 # Emergency override MODERN_CMAKE_BUILD_TESTING provided as well
+set(BUILD_TESTING ON)
 if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING)
-   AND BUILD_TESTING)
+AND BUILD_TESTING)
   enable_testing()
   add_subdirectory(tests)
 endif()

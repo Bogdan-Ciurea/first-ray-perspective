@@ -2,7 +2,12 @@
 
 ObjectsList::ObjectsList() {}
 
-ObjectsList::~ObjectsList() {}
+ObjectsList::~ObjectsList() {
+  for (const auto& object : objects) {
+    object.~shared_ptr();
+  }
+  objects.clear();
+}
 
 void ObjectsList::add(std::shared_ptr<Object> object) {
   objects.push_back(object);

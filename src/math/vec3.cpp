@@ -11,86 +11,31 @@
 
 #include "math/vec3.hpp"
 
-vec3::vec3() : e{0, 0, 0} {}
-
-vec3::vec3(const vec3& v) : e{v.e[0], v.e[1], v.e[2]} {}
-
-vec3::vec3(const double e0, const double e1, const double e2) : e{e0, e1, e2} {}
-
-double vec3::operator[](int i) const {
-  if (i < 0 || i > 2) {
-    throw std::out_of_range("Index out of bounds");
-  }
-  return e[i];
+inline std::istream &operator>>(std::istream &is, vec3 &t) {
+  is >> t.e[0] >> t.e[1] >> t.e[2];
+  return is;
 }
 
-bool vec3::operator==(const vec3& v) const {
-  for (int i = 0; i < 3; i++) {
-    if (abs(e[i] - v[i]) < std::numeric_limits<float>::epsilon()) {
-      return false;
-    }
-  }
-  return true;
+inline std::ostream &operator<<(std::ostream &os, const vec3 &t) {
+  os << t.e[0] << " " << t.e[1] << " " << t.e[2];
+  return os;
 }
 
-bool vec3::operator!=(const vec3& v) const { return !(*this == v); }
+/**
+ * @brief Create a color object. Keep in mind that you might want to scale the
+ * color values by 255 when using this function.
+ *
+ * @param r  The red component
+ * @param g  The green component
+ * @param b  The blue component
+ * @param a  The alpha component
+ * @return Color  The color object
+ */
+Color create_color(int r, int g, int b, int a) {
+  r = clamp(abs(r), 0, 255);
+  g = clamp(abs(g), 0, 255);
+  b = clamp(abs(b), 0, 255);
+  a = clamp(abs(a), 0, 255);
 
-vec3 vec3::operator+(const vec3& v) {
-  return vec3(e[0] + v.e[0], e[1] + v[1], e[2] + v.e[2]);
-}
-
-vec3 vec3::operator-() const { return vec3(-e[0], -e[1], -e[2]); }
-
-vec3 vec3::operator*(double t) const {
-  return vec3(e[0] * t, e[1] * t, e[2] * t);
-}
-
-vec3 vec3::operator/(double t) const { return *this * (1 / t); }
-
-vec3 vec3::cross(const vec3& v) const {
-  return vec3(e[1] * v.e[2] - e[2] * v.e[1], e[2] * v.e[0] - e[0] * v.e[2],
-              e[0] * v.e[1] - e[1] * v.e[0]);
-}
-
-vec3 vec3::unit_vector() const { return *this / length(); }
-
-double vec3::dot(const vec3& v) const {
-  return e[0] * v.e[0] + e[1] * v.e[1] + e[2] * v.e[2];
-}
-
-double vec3::length() const { return sqrt(length_squared()); }
-
-double vec3::length_squared() const {
-  return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
-}
-
-vec3& vec3::operator+=(const vec3& v) {
-  e[0] += v.e[0];
-  e[1] += v.e[1];
-  e[2] += v.e[2];
-  return *this;
-}
-
-vec3& vec3::operator-=(const vec3& v) {
-  e[0] -= v.e[0];
-  e[1] -= v.e[1];
-  e[2] -= v.e[2];
-  return *this;
-}
-
-vec3& vec3::operator*=(const double t) {
-  e[0] *= t;
-  e[1] *= t;
-  e[2] *= t;
-  return *this;
-}
-
-vec3& vec3::operator/=(const double t) { return *this *= 1 / t; }
-
-std::ostream& operator<<(std::ostream& out, const vec3& v) {
-  return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
-}
-
-std::istream& operator>>(std::istream& in, vec3& v) {
-  return in >> v.e[0] >> v.e[1] >> v.e[2];
+  return Color{(uchar)r, uchar(g), (uchar)b, (uchar)a};
 }

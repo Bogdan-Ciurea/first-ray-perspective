@@ -36,7 +36,7 @@ class Sphere : public Object {
    *
    * @return Material The material of the sphere
    */
-  Material* get_material();
+  // Material* get_material();
 
   /**
    * @brief Get the center of the sphere
@@ -74,7 +74,7 @@ class Sphere : public Object {
  private:
   vec3 center;
   double radius;
-  Material* material;
+  // Material* material;
 };
 
 #endif  // SPHERE_HPP

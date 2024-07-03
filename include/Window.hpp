@@ -14,35 +14,23 @@
 
 #include <omp.h>
 
+#include "camera.hpp"
 #include "objects/ObjectsList.hpp"
-#include "raylib.h"
 
 class RaytraceWindow {
  public:
   RaytraceWindow(int screen_width, int screen_height, const char* title);
 
-  ~RaytraceWindow() { CloseWindow(); }
+  ~RaytraceWindow();
 
   void draw();
   void set_world(ObjectsList& world) { this->world = world; }
 
  private:
-  void draw_pixel(int i, int j, Color color) { DrawPixel(i, j, color); }
-
-  bool should_close() { return WindowShouldClose(); }
-
-  void begin_drawing() { BeginDrawing(); }
-
-  void end_drawing() { EndDrawing(); }
-
-  int get_screen_width() { return screen_width; }
-
-  int get_screen_height() { return screen_height; }
-
   int screen_width;
   int screen_height;
-  Color* pixels;
   ObjectsList world;
+  camera cam;
 };
 
 #endif  // WINDOW_HPP

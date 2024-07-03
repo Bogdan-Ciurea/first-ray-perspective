@@ -52,6 +52,10 @@ class mat4 {
   static mat4 translate(const vec3& v);
   static mat4 scale(const vec3& v);
   static mat4 rotate(float angle, const vec3& axis);
+
+  void rotate_x(float angle) { *this = *this * rotate(angle, vec3(1, 0, 0)); }
+  void rotate_y(float angle) { *this = *this * rotate(angle, vec3(0, 1, 0)); }
+  void rotate_z(float angle) { *this = *this * rotate(angle, vec3(0, 0, 1)); }
 };
 
 #endif  // MAT4_HPP
