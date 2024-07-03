@@ -11,6 +11,8 @@
 
 #include "Window.hpp"
 
+#include <chrono>
+
 RaytraceWindow::RaytraceWindow(int screen_width, int screen_height,
                                const char* title)
     : screen_width(screen_width), screen_height(screen_height) {
@@ -27,11 +29,19 @@ RaytraceWindow::~RaytraceWindow() {
 }
 
 void RaytraceWindow::draw() {
-  while (!WindowShouldClose()) {
-    BeginDrawing();
+  auto last = Clock::now();
 
-    // Clear the screen
-    ClearBackground(BLACK);
+  while (!WindowShouldClose()) {
+    // ---- Calculate necessary information ----
+
+    // Update state
+    const auto now = Clock::now();
+    float dt = std::chrono::duration_cast<Secondsf>(now - last).count();
+    last = now;
+
+    // Activate or deactivate camera movement using the space key
+    if (IsKeyPressed(KEY_SPACE)) cam.is_moving = !cam.is_moving;
+    cam.update_state(dt);
 
 // Calculate each pixel color
 // If we are using OpenMP, we can parallelize the loop
@@ -42,6 +52,11 @@ void RaytraceWindow::draw() {
       for (int i = 0; i < screen_width; i++)
         pixels[j * screen_width + i] = cam.send_ray(world, i, j);
     }
+
+    BeginDrawing();
+
+    // Clear the screen
+    ClearBackground(BLACK);
 
     // Draw the pixels
     for (int j = 0; j < screen_height; j++)

@@ -14,6 +14,7 @@
 
 // Common Headers
 
+#include <chrono>
 #include <cmath>
 #include <iostream>
 #include <limits>
@@ -28,6 +29,8 @@ using std::make_shared;
 using std::shared_ptr;
 using std::sqrt;
 using std::vector;
+using Secondsf = std::chrono::duration<float, std::ratio<1>>;
+using Clock = std::chrono::steady_clock;
 
 // Defining aliases
 typedef unsigned int uint;
