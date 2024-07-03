@@ -48,10 +48,13 @@ void RaytraceWindow::draw() {
 #ifdef USE_OPENMP
 #pragma omp parallel for
 #endif
-    for (int j = 0; j < screen_height; j++) {
-      for (int i = 0; i < screen_width; i++)
-        pixels[j * screen_width + i] = cam.send_ray(world, i, j);
-    }
+    for (int j = 0; j < screen_height; j++)
+      for (int i = 0; i < screen_width; i++) {
+        for (int k = 0; k < NO_RAYS_PER_PIXEL; k++) {
+          const Color pixel_color = cam.send_ray(world, i, j);
+          pixels[(j * screen_width + i) * NO_RAYS_PER_PIXEL + k] = pixel_color;
+        }
+      }
 
     BeginDrawing();
 
@@ -59,9 +62,7 @@ void RaytraceWindow::draw() {
     ClearBackground(BLACK);
 
     // Draw the pixels
-    for (int j = 0; j < screen_height; j++)
-      for (int i = 0; i < screen_width; i++)
-        DrawPixel(i, j, pixels[j * screen_width + i]);
+    draw_pixels();
 
     EndDrawing();
   }
@@ -70,4 +71,19 @@ void RaytraceWindow::draw() {
   CloseWindow();
   cam.~camera();
   delete[] pixels;
+}
+
+void RaytraceWindow::draw_pixels() {
+  for (int j = 0; j < screen_height; j++) {
+    for (int i = 0; i < screen_width; i++) {
+      Color pixel_color = Color{0, 0, 0, 255};
+      for (int k = 0; k < NO_RAYS_PER_PIXEL; k++) {
+        const Color cp = pixels[(j * screen_width + i) * NO_RAYS_PER_PIXEL + k];
+        pixel_color.r += cp.r / NO_RAYS_PER_PIXEL;
+        pixel_color.g += cp.g / NO_RAYS_PER_PIXEL;
+        pixel_color.b += cp.b / NO_RAYS_PER_PIXEL;
+      }
+      DrawPixel(i, j, pixel_color);
+    }
+  }
 }

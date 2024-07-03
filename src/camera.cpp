@@ -119,7 +119,7 @@ bool camera::update_camera_orientation() {
 
   vec3 direction;
   direction[0] = cosf(yaw * DEG2RAD) * cosf(pitch * DEG2RAD);
-  direction[1] = sinf(pitch * DEG2RAD);
+  direction[1] = -sinf(pitch * DEG2RAD);
   direction[2] = sinf(yaw * DEG2RAD) * cosf(pitch * DEG2RAD);
 
   look_at_point = camera_position + unit_vector(direction);

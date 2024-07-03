@@ -32,6 +32,8 @@ class RaytraceWindow {
   ObjectsList* world;
   camera cam;
   Color* pixels;
+
+  void draw_pixels();
 };
 
 #endif  // WINDOW_HPP

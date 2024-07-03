@@ -12,13 +12,16 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-// Common Headers
+#define NO_RAYS_PER_PIXEL 4
+#define TARGET_FPS 30
 
+// Common Headers
 #include <chrono>
 #include <cmath>
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <unordered_set>
 #include <vector>
 
 #include "raylib.h"
