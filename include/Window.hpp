@@ -14,6 +14,7 @@
 
 #include <omp.h>
 
+#include "camera.hpp"
 #include "objects/ObjectsList.hpp"
 
 class RaytraceWindow {
@@ -26,20 +27,10 @@ class RaytraceWindow {
   void set_world(ObjectsList& world) { this->world = world; }
 
  private:
-  bool should_close() { return WindowShouldClose(); }
-
-  void begin_drawing() { BeginDrawing(); }
-
-  void end_drawing() { EndDrawing(); }
-
-  int get_screen_width() { return screen_width; }
-
-  int get_screen_height() { return screen_height; }
-
   int screen_width;
   int screen_height;
-  Color* pixels;
   ObjectsList world;
+  camera cam;
 };
 
 #endif  // WINDOW_HPP

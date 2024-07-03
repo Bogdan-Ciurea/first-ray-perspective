@@ -12,13 +12,9 @@
 
 #include <iostream>
 
+#include "camera.hpp"
 #include "objects/ObjectsList.hpp"
 #include "objects/Sphere.hpp"
-#include "ray.hpp"
-
-Color vec3_to_color(const vec3& v) {
-  return create_color(255.99 * v.x(), 255.99 * v.y(), 255.99 * v.z(), 255);
-}
 
 Color ray_color(const ray& r, ObjectsList& world) {
   hit_record rec;

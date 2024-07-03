@@ -40,5 +40,8 @@ int main() {
 #endif
   window.draw();
 
+  window.~RaytraceWindow();
+  world.~ObjectsList();
+
   return 0;
 }

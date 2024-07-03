@@ -8,7 +8,8 @@ set(SOURCE_FILES
   objects/ObjectsList.cpp
   objects/Sphere.cpp
 
-  hit_record.cpp
+  ray.cpp
+  camera.cpp
   Window.cpp
 )
 
