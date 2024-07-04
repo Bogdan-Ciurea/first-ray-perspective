@@ -12,7 +12,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#define NO_RAYS_PER_PIXEL 4
+#define NO_RAYS_PER_PIXEL 1
 #define TARGET_FPS 30
 
 // Common Headers
@@ -21,6 +21,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <random>
 #include <unordered_set>
 #include <vector>
 

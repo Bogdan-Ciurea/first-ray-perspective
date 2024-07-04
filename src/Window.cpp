@@ -41,7 +41,7 @@ void RaytraceWindow::draw() {
 
     // Activate or deactivate camera movement using the space key
     if (IsKeyPressed(KEY_SPACE)) cam.is_moving = !cam.is_moving;
-    cam.update_state(dt);
+    if (cam.update_state(dt)) reset_pixels();
 
 // Calculate each pixel color
 // If we are using OpenMP, we can parallelize the loop
@@ -50,9 +50,9 @@ void RaytraceWindow::draw() {
 #endif
     for (int j = 0; j < screen_height; j++)
       for (int i = 0; i < screen_width; i++) {
-        for (int k = 0; k < NO_RAYS_PER_PIXEL; k++) {
+        for (int k = 0; k < rays_per_pixel; k++) {
           const Color pixel_color = cam.send_ray(world, i, j);
-          pixels[(j * screen_width + i) * NO_RAYS_PER_PIXEL + k] = pixel_color;
+          pixels[(j * screen_width + i) * rays_per_pixel + k] = pixel_color;
         }
       }
 
@@ -77,13 +77,65 @@ void RaytraceWindow::draw_pixels() {
   for (int j = 0; j < screen_height; j++) {
     for (int i = 0; i < screen_width; i++) {
       Color pixel_color = Color{0, 0, 0, 255};
-      for (int k = 0; k < NO_RAYS_PER_PIXEL; k++) {
-        const Color cp = pixels[(j * screen_width + i) * NO_RAYS_PER_PIXEL + k];
-        pixel_color.r += cp.r / NO_RAYS_PER_PIXEL;
-        pixel_color.g += cp.g / NO_RAYS_PER_PIXEL;
-        pixel_color.b += cp.b / NO_RAYS_PER_PIXEL;
+      for (int k = 0; k < rays_per_pixel; k++) {
+        const Color cp = pixels[(j * screen_width + i) * rays_per_pixel + k];
+        pixel_color.r += cp.r / rays_per_pixel;
+        pixel_color.g += cp.g / rays_per_pixel;
+        pixel_color.b += cp.b / rays_per_pixel;
       }
       DrawPixel(i, j, pixel_color);
     }
   }
+}
+
+void RaytraceWindow::reset_pixels() {
+  const int total_pixels = screen_width * screen_height * rays_per_pixel;
+
+  if (pixels) delete[] pixels;
+  pixels = new Color[total_pixels];
+
+  total_elements.clear();
+  for (int i = 0; i < total_pixels; i++) total_elements.push_back(i);
+  shuffle_indices(total_elements, 0);
+}
+
+double RaytraceWindow::get_ray_random_duration() {
+  const double start_time = GetTime();
+  cam.send_ray(world, GetRandomValue(0, screen_width),
+               GetRandomValue(0, screen_height));
+  return GetTime() - start_time;
+}
+
+void RaytraceWindow::shuffle_indices(std::vector<int>& indices,
+                                     int start_index) {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+
+  for (int i = start_index; i < indices.size(); ++i) {
+    std::uniform_int_distribution<> dis(i, indices.size() - 1);
+    std::swap(indices[i], indices[dis(gen)]);
+  }
+}
+
+std::vector<int> RaytraceWindow::select_random_colors(std::vector<int>& indices,
+                                                      int& start_index,
+                                                      int num_to_select,
+                                                      int total_elements) {
+  std::vector<int> result;
+  result.reserve(num_to_select);
+
+  int end_index = start_index + num_to_select;
+
+  if (end_index > total_elements) {
+    end_index = total_elements;
+    num_to_select = end_index - start_index;
+  }
+
+  for (int i = start_index; i < end_index; ++i) {
+    result.push_back(indices[i]);
+  }
+
+  start_index = end_index;
+
+  return result;
 }
