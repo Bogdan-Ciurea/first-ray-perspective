@@ -36,9 +36,5 @@ int main() {
 
   window.draw();
 
-  window.~RaytraceWindow();
-  //  world.~ObjectsList(); // TODO: might want to change shared pointers to
-  //  normal pointers
-
   return 0;
 }

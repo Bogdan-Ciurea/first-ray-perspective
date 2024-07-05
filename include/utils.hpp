@@ -21,6 +21,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <numeric>
 #include <random>
 #include <unordered_set>
 #include <vector>
@@ -35,6 +36,7 @@ using std::sqrt;
 using std::vector;
 using Secondsf = std::chrono::duration<float, std::ratio<1>>;
 using Clock = std::chrono::steady_clock;
+// auto now = std::chrono::high_resolution_clock::now();
 
 // Defining aliases
 typedef unsigned int uint;
