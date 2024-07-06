@@ -63,7 +63,7 @@ class camera {
   float movement_per_second = 1.0f;  // Camera movement speed
 
   void initialize();
-  Color ray_color(const ray& r, ObjectsList* world, const size_t depth = 1);
+  vec3 ray_color(ray& r, ObjectsList* world, const size_t depth = 1);
   bool update_camera_orientation();
 };
 

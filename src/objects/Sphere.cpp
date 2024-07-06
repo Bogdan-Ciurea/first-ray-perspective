@@ -11,12 +11,11 @@
 
 #include "objects/Sphere.hpp"
 
-Sphere::Sphere(const vec3& center, double radius)
-    : center(center), radius(radius) {}
+Sphere::Sphere(const vec3& _center, double _radius,
+               std::shared_ptr<material> _mat)
+    : center(_center), radius(_radius), mat(_mat) {}
 
 Sphere::~Sphere() {}
-
-// Material* Sphere::get_material() { return material; }
 
 vec3 Sphere::get_center() { return center; }
 
@@ -35,6 +34,7 @@ bool Sphere::intersect(const ray& r, const float t_min, const float t_max,
       rec.t = temp;
       rec.p = r.at(rec.t);
       rec.normal = (rec.p - center) / radius;
+      rec.mat_ptr = mat;
       return true;
     }
     temp = (-b + sqrt(discriminant)) / a;
@@ -42,6 +42,7 @@ bool Sphere::intersect(const ray& r, const float t_min, const float t_max,
       rec.t = temp;
       rec.p = r.at(rec.t);
       rec.normal = (rec.p - center) / radius;
+      rec.mat_ptr = mat;
       return true;
     }
   }

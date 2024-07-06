@@ -39,7 +39,7 @@ class ray {
    * @param intersection_point The coordinates of the intersection point
    * @return vec3 The reflected ray
    */
-  vec3 reflect(const vec3& normal, const vec3& intersection_point) const;
+  ray reflect(const vec3& normal, const vec3& intersection_point) const;
 
   /**
    * @brief Function that constructs a refracted ray from an intersection point
@@ -49,13 +49,15 @@ class ray {
    * @param etai_over_etat The ratio of the refractive indices
    * @return vec3 The refracted ray
    */
-  vec3 refract(const vec3& normal, const vec3& intersection_point,
-               double etai_over_etat) const;
+  ray refract(const vec3& normal, const vec3& intersection_point,
+              double etai_over_etat) const;
 
  private:
   vec3 orig;
   vec3 dir;
 };
+
+class material;
 
 class hit_record {
  public:
@@ -63,6 +65,7 @@ class hit_record {
   vec3 normal;
   double t;
   bool front_face;
+  std::shared_ptr<material> mat_ptr;
 
   /**
    * @brief Set the face normal object

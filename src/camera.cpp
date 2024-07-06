@@ -3,7 +3,6 @@
 camera::camera() {
   screen_height = 100;
   screen_width = 100;
-  aspect_ratio = 1.0;
   max_depth = 10;
   initialize();
 }
@@ -13,7 +12,6 @@ camera::camera(const size_t image_width, const size_t screen_height,
     : screen_height(screen_height),
       screen_width(image_width),
       max_depth(max_depth) {
-  aspect_ratio = double(screen_width) / screen_height;
   initialize();
 }
 
@@ -23,25 +21,28 @@ Color camera::send_ray(ObjectsList* world, const double pixel_width,
                       (pixel_height * pixel_delta_v);
   auto ray_direction = pixel_center - camera_position;
   ray r(camera_position, ray_direction);
-  return ray_color(r, world, max_depth);
+  return ray_color(r, world, max_depth).to_color(255);
 }
 
-Color camera::ray_color(const ray& r, ObjectsList* world, const size_t depth) {
+vec3 camera::ray_color(ray& r, ObjectsList* world, const size_t depth) {
   if (depth <= 0) {
-    return Color{0, 0, 0, 255};
+    return vec3(0, 0, 0);
   }
 
   hit_record rec;
   if (world->intersect(r, std::numeric_limits<float>::epsilon(), infinity,
                        rec)) {
-    vec3 direction = rec.normal + random_unit_vector();
-    return 0.1 * ray_color(ray(rec.p, direction), world, depth - 1);
+    ray scattered;
+    vec3 attenuation;
+    if (rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
+      return attenuation * ray_color(scattered, world, depth - 1);
+    }
+    vec3(0, 0, 0);
   }
 
   vec3 unit_direction = unit_vector(r.direction());
   float t = 0.5 * (unit_direction.y() + 1.0);
-  return ((float)(1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0))
-      .to_color(255.99f);
+  return (float)(1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
 }
 
 void camera::initialize() {

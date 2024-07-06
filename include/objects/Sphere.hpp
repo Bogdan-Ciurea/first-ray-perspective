@@ -23,7 +23,8 @@ class Sphere : public Object {
    * @param radius The radius of the sphere
    * @param material The material of the sphere
    */
-  Sphere(const vec3& center, double radius);
+  Sphere(const vec3& center, double radius,
+         const std::shared_ptr<material> material);
 
   /**
    * @brief Destroy the Sphere object
@@ -75,7 +76,7 @@ class Sphere : public Object {
  private:
   vec3 center;
   double radius;
-  // Material* material;
+  std::shared_ptr<material> mat;
 };
 
 #endif  // SPHERE_HPP

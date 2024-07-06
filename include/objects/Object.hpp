@@ -13,7 +13,7 @@
 #ifndef OBJECT_HPP
 #define OBJECT_HPP
 
-#include "ray.hpp"
+#include "material.hpp"
 
 class Object {
  public:
