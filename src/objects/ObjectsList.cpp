@@ -2,9 +2,7 @@
 
 ObjectsList::ObjectsList() {}
 
-ObjectsList::~ObjectsList() {
-  objects.clear();
-}
+ObjectsList::~ObjectsList() { objects.clear(); }
 
 void ObjectsList::add(std::shared_ptr<Object> object) {
   objects.push_back(object);
@@ -16,7 +14,7 @@ std::vector<std::shared_ptr<Object>> ObjectsList::get_objects() {
   return objects;
 }
 
-bool ObjectsList::intersect(const ray& r, double t_min, double t_max,
+bool ObjectsList::intersect(const ray& r, const float t_min, const float t_max,
                             hit_record& rec) {
   hit_record temp_rec;
   bool hit_anything = false;

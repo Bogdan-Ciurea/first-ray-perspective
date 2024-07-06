@@ -22,7 +22,7 @@ vec3 Sphere::get_center() { return center; }
 
 double Sphere::get_radius() { return radius; }
 
-bool Sphere::intersect(const ray& r, double t_min, double t_max,
+bool Sphere::intersect(const ray& r, const float t_min, const float t_max,
                        hit_record& rec) {
   vec3 oc = r.origin() - center;
   float a = dot(r.direction(), r.direction());

@@ -61,7 +61,8 @@ class Sphere : public Object {
    * @param rec The hit record
    * @return bool True if the ray intersects the sphere, false otherwise
    */
-  bool intersect(const ray& r, double t_min, double t_max, hit_record& rec);
+  bool intersect(const ray& r, const float t_min, const float t_max,
+                 hit_record& rec);
 
   /**
    * @brief Move the sphere by a given offset

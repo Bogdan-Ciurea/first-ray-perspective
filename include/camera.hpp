@@ -19,7 +19,8 @@ Color vec3_to_color(const vec3& v);
 class camera {
  public:
   camera();
-  camera(int image_width, int screen_height);
+  camera(const size_t image_width, const size_t screen_height,
+         const size_t max_depth);
 
   /**
    * @brief Destroy the camera object
@@ -45,6 +46,7 @@ class camera {
 
  private:
   int screen_height;  // Rendered image height
+  size_t max_depth;   // Maximum depth of the ray
 
   vec3 pixel00_loc;    // Location of pixel 0, 0
   vec3 pixel_delta_u;  // Offset to pixel to the right
@@ -61,7 +63,7 @@ class camera {
   float movement_per_second = 1.0f;  // Camera movement speed
 
   void initialize();
-  Color ray_color(const ray& r, ObjectsList* world);
+  Color ray_color(const ray& r, ObjectsList* world, const size_t depth = 1);
   bool update_camera_orientation();
 };
 

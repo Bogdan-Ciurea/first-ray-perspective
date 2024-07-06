@@ -56,7 +56,8 @@ class ObjectsList : public Object {
    * @return bool True if the ray intersects any object in the list, false
    * otherwise
    */
-  bool intersect(const ray& r, double t_min, double t_max, hit_record& rec);
+  bool intersect(const ray& r, const float t_min, const float t_max,
+                 hit_record& rec);
 
   void move(const vec3& offset);
   void rotate(const vec3& axis, double angle);

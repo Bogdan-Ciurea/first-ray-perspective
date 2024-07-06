@@ -25,7 +25,7 @@ RaytraceWindow::RaytraceWindow(const size_t screen_width,
   shuffle_indices(shuffled_index_array, 0);
 
   reset_pixels();
-  cam = camera(screen_width, screen_height);
+  cam = camera(screen_width, screen_height, 10);
 }
 
 RaytraceWindow::~RaytraceWindow() {
@@ -78,7 +78,7 @@ void RaytraceWindow::draw() {
       // Calculate each pixel color
       // If we are using OpenMP, we can parallelize the loop
 #ifdef USE_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic)
 #endif
       for (size_t f = 0; f < selected_elements.size(); f++) {
         const size_t index = selected_elements[f];
@@ -86,9 +86,8 @@ void RaytraceWindow::draw() {
         double i = index / rays_per_pixel % screen_width;
 
         // Now randomise the ray a bit
-        // TraceLog(LOG_INFO, "Sending ray for pixel %d, %d", i, j);
-        i += GetRandomValue(0, 100) / 100.0 - 0.5;
-        j += GetRandomValue(0, 100) / 100.0 - 0.5;
+        i += random_double() - 0.5;
+        j += random_double() - 0.5;
 
         pixels[index] = cam.send_ray(world, i, j);
       }
@@ -128,8 +127,15 @@ void RaytraceWindow::draw_pixels() {
       pixel_color /= rays_per_pixel;
       pixel_color.e[3] = 255;
 
+      // We already calculate everything in float, so we just do gamma
+      // correction before putting it integer format.
+      // Linear to Gamma: 255 * pow(linearvalue / 255, 1 / 2.2)
+      pixel_color.e[0] = pow(pixel_color.r() / 255, 1 / 2.2f);
+      pixel_color.e[1] = pow(pixel_color.g() / 255, 1 / 2.2f);
+      pixel_color.e[2] = pow(pixel_color.b() / 255, 1 / 2.2f);
+
       // Assign the averaged color to the final pixel position
-      image_pixels[j * screen_width + i] = pixel_color.to_color();
+      image_pixels[j * screen_width + i] = pixel_color.to_color(255);
     }
   }
 

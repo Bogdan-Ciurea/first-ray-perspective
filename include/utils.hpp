@@ -47,9 +47,10 @@ const double infinity = std::numeric_limits<double>::infinity();
 
 // Utility Functions
 
-inline double random_double() {
+inline double random_double(float min = 0, float max = 1) {
   // Returns a random real in [0,1).
-  return rand() / (RAND_MAX + 1.0);
+  const double rand = (double)GetRandomValue(0, 100000) / 100000.0;
+  return min + (max - min) * rand;
 }
 
 inline double clamp(double x, double min, double max) {
