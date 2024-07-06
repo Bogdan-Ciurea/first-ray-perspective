@@ -1,9 +1,5 @@
 #include "camera.hpp"
 
-Color vec3_to_color(const vec3& v) {
-  return create_color(255.99 * v.x(), 255.99 * v.y(), 255.99 * v.z(), 255);
-}
-
 camera::camera() {
   screen_height = 100;
   screen_width = 100;
@@ -28,14 +24,15 @@ Color camera::send_ray(ObjectsList* world, const double pixel_width,
 Color camera::ray_color(const ray& r, ObjectsList* world) {
   hit_record rec;
   if (world->intersect(r, 0, infinity, rec)) {
-    return vec3_to_color(0.5f * vec3(rec.normal.x() + 1, rec.normal.y() + 1,
-                                     rec.normal.z() + 1));
+    return (0.5f *
+            vec3(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1))
+        .to_color(255.99f);
   }
 
   vec3 unit_direction = unit_vector(r.direction());
   float t = 0.5 * (unit_direction.y() + 1.0);
-  return vec3_to_color((float)(1.0 - t) * vec3(1.0, 1.0, 1.0) +
-                       t * vec3(0.5, 0.7, 1.0));
+  return ((float)(1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0))
+      .to_color(255.99f);
 }
 
 void camera::initialize() {

@@ -1,7 +1,5 @@
 # Set the source files for the library
 set(SOURCE_FILES
-  math/vec3.cpp
-  math/vec4.cpp
   math/mat4.cpp
 
   # Add more source files here
