@@ -27,5 +27,5 @@ Color create_color(int r, int g, int b, int a) {
   b = clamp(abs(b), 0, 255);
   a = clamp(abs(a), 0, 255);
 
-  return Color{(uchar)r, uchar(g), (uchar)b, (uchar)a};
+  return Color{(uchar)r, (uchar)g, (uchar)b, (uchar)a};
 }

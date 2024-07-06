@@ -28,7 +28,7 @@ class RaytraceWindow {
   void set_world(ObjectsList* world) { this->world = world; }
 
  private:
-  uint rays_per_pixel = 1;
+  uint rays_per_pixel = 5;
   uint target_fps = 30;
   size_t start_index = 0;  // The starting index for the next selection (when
                            // selecting random colors)
@@ -41,8 +41,8 @@ class RaytraceWindow {
   Texture2D texture;  // The texture that we are going to draw (DrawPixel method
                       // is not efficient for large images)
 
-  std::vector<size_t> total_elements;  // The array that we are actually going
-                                       // to use
+  std::vector<size_t> total_samples;  // The array that we are actually going
+                                      // to use
   std::vector<size_t> shuffled_index_array;  // An array of shuffled indices
 
   void draw_pixels();
@@ -57,13 +57,11 @@ class RaytraceWindow {
    * @param indices Reference to a vector of indices representing the colors.
    * @param start_index Reference to the starting index for the next selection.
    * @param num_to_select Number of elements to select.
-   * @param total_elements Total number of elements in the colors array.
    * @return std::vector<int> A vector of selected indices.
    */
-  std::vector<int> select_random_colors(std::vector<size_t>& indices,
-                                        size_t& start_index,
-                                        size_t num_to_select,
-                                        size_t total_elements);
+  std::vector<size_t> select_random_samples(std::vector<size_t>& indices,
+                                            size_t& start_index,
+                                            size_t num_to_select);
 };
 
 #endif  // WINDOW_HPP

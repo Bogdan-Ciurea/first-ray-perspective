@@ -27,8 +27,8 @@ class camera {
    */
   ~camera() {}
 
-  Color send_ray(ObjectsList* world, const uint pixel_width,
-                 const uint pixel_height);
+  Color send_ray(ObjectsList* world, const double pixel_width,
+                 const double pixel_height);
 
   double aspect_ratio = 1.0;  // Ratio of image width over height
   int screen_width = 100;     // Rendered image width in pixel count

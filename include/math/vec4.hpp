@@ -106,6 +106,15 @@ class vec4 {
   friend std::ostream& operator<<(std::ostream& out, const vec4& v);
   friend std::istream& operator>>(std::istream& in, vec4& v);
 
+  Color to_color() const {
+    uchar r = clamp(abs(e[0]), 0, 255);
+    uchar g = clamp(abs(e[1]), 0, 255);
+    uchar b = clamp(abs(e[2]), 0, 255);
+    uchar a = clamp(abs(e[3]), 0, 255);
+
+    return Color{r, g, b, a};
+  }
+
   std::array<float, 4> e;
 };
 

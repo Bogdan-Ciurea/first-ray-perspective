@@ -16,8 +16,8 @@ camera::camera(int image_width, int screen_height)
   initialize();
 }
 
-Color camera::send_ray(ObjectsList* world, const uint pixel_width,
-                       const uint pixel_height) {
+Color camera::send_ray(ObjectsList* world, const double pixel_width,
+                       const double pixel_height) {
   auto pixel_center = pixel00_loc + (pixel_width * pixel_delta_u) +
                       (pixel_height * pixel_delta_v);
   auto ray_direction = pixel_center - camera_position;

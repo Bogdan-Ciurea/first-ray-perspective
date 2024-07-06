@@ -47,6 +47,8 @@ void RaytraceWindow::draw() {
 
     // Activate or deactivate camera movement using the space key
     if (IsKeyPressed(KEY_SPACE)) cam.is_moving = !cam.is_moving;
+    if (IsKeyPressed(KEY_R)) reset_pixels();
+    if (IsKeyPressed(KEY_P)) TakeScreenshot("screenshot.png");
 
     if (cam.update_state(dt)) reset_pixels();
 
@@ -70,9 +72,8 @@ void RaytraceWindow::draw() {
         start_index >= screen_width * screen_height * rays_per_pixel;
     if (!is_done) {
       // Calculate which pixels to update
-      std::vector<int> selected_elements =
-          select_random_colors(total_elements, start_index, rays_to_send,
-                               screen_width * screen_height * rays_per_pixel);
+      std::vector<size_t> selected_elements =
+          select_random_samples(total_samples, start_index, rays_to_send);
 
       // Calculate each pixel color
       // If we are using OpenMP, we can parallelize the loop
@@ -80,9 +81,14 @@ void RaytraceWindow::draw() {
 #pragma omp parallel for
 #endif
       for (size_t f = 0; f < selected_elements.size(); f++) {
-        const int index = selected_elements[f];
-        const int j = index / screen_width / rays_per_pixel;
-        const int i = index / rays_per_pixel % screen_width;
+        const size_t index = selected_elements[f];
+        double j = index / rays_per_pixel / screen_width;
+        double i = index / rays_per_pixel % screen_width;
+
+        // Now randomise the ray a bit
+        // TraceLog(LOG_INFO, "Sending ray for pixel %d, %d", i, j);
+        i += GetRandomValue(0, 100) / 100.0 - 0.5;
+        j += GetRandomValue(0, 100) / 100.0 - 0.5;
 
         pixels[index] = cam.send_ray(world, i, j);
       }
@@ -109,19 +115,21 @@ void RaytraceWindow::draw_pixels() {
   // Loop through each pixel
   for (size_t j = 0; j < screen_height; j++) {
     for (size_t i = 0; i < screen_width; i++) {
-      Color pixel_color = {0, 0, 0, 255};
+      vec4 pixel_color(0, 0, 0, 255);
       for (size_t k = 0; k < rays_per_pixel; k++) {
         int index = (j * screen_width + i) * rays_per_pixel + k;
         if (index < screen_width * screen_height * rays_per_pixel) {
-          const Color cp = pixels[index];
-          pixel_color.r += cp.r / rays_per_pixel;
-          pixel_color.g += cp.g / rays_per_pixel;
-          pixel_color.b += cp.b / rays_per_pixel;
+          const Color sample = pixels[index];
+          pixel_color += vec4(sample.r, sample.g, sample.b, 0);
         }
       }
 
+      // Average the color
+      pixel_color /= rays_per_pixel;
+      pixel_color.e[3] = 255;
+
       // Assign the averaged color to the final pixel position
-      image_pixels[j * screen_width + i] = pixel_color;
+      image_pixels[j * screen_width + i] = pixel_color.to_color();
     }
   }
 
@@ -154,11 +162,11 @@ void RaytraceWindow::reset_pixels() {
   // array but not exactly from the start but with a random offset
   // This way we can ensure that we are not going to send the same rays
   // every time
-  total_elements.clear();
-  total_elements.reserve(total_pixels);
+  total_samples.clear();
+  total_samples.reserve(total_pixels);
   const int offset = GetRandomValue(0, total_pixels);
   for (size_t i = 0; i < total_pixels; i++) {
-    total_elements[i] = shuffled_index_array[(i + offset) % total_pixels];
+    total_samples[i] = shuffled_index_array[(i + offset) % total_pixels];
   }
 
   start_index = 0;
@@ -183,22 +191,19 @@ void RaytraceWindow::shuffle_indices(std::vector<size_t>& indices,
   }
 }
 
-std::vector<int> RaytraceWindow::select_random_colors(
-    std::vector<size_t>& indices, size_t& start_index, size_t num_to_select,
-    size_t total_elements) {
-  std::vector<int> result;
+std::vector<size_t> RaytraceWindow::select_random_samples(
+    std::vector<size_t>& indices, size_t& start_index, size_t num_to_select) {
+  std::vector<size_t> result;
   result.reserve(num_to_select);
 
-  int end_index = start_index + num_to_select;
+  size_t end_index = start_index + num_to_select;
 
-  if (end_index > total_elements) {
-    end_index = total_elements;
+  if (end_index > shuffled_index_array.size()) {
+    end_index = shuffled_index_array.size();
     num_to_select = end_index - start_index;
   }
 
-  for (size_t i = start_index; i < end_index; ++i) {
-    result.push_back(indices[i]);
-  }
+  for (size_t i = start_index; i < end_index; ++i) result.push_back(indices[i]);
 
   start_index = end_index;
 
