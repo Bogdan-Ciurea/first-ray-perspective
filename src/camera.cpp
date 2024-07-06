@@ -19,8 +19,10 @@ Color camera::send_ray(ObjectsList* world, const double pixel_width,
                        const double pixel_height) {
   auto pixel_center = pixel00_loc + (pixel_width * pixel_delta_u) +
                       (pixel_height * pixel_delta_v);
+  auto ray_origin =
+      (defocus_angle <= 0) ? camera_position : defocus_disk_sample();
   auto ray_direction = pixel_center - camera_position;
-  ray r(camera_position, ray_direction);
+  ray r(ray_origin, ray_direction);
   return ray_color(r, world, max_depth).to_color(255);
 }
 
@@ -48,10 +50,9 @@ vec3 camera::ray_color(ray& r, ObjectsList* world, const size_t depth) {
 }
 
 void camera::initialize() {
-  auto focal_length = (camera_position - look_at_point).length();
   auto theta = vfov * DEG2RAD;
   auto h = tan(theta / 2);
-  auto viewport_height = 2 * h * focal_length;
+  auto viewport_height = 2 * h * focus_dist;
   auto viewport_width =
       viewport_height * (double(screen_width) / screen_height);
 
@@ -66,8 +67,13 @@ void camera::initialize() {
   pixel_delta_v = viewport_v / screen_height;
 
   auto viewport_upper_left =
-      camera_position - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+      camera_position - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
   pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+
+  // Calculate the camera defocus disk basis vectors.
+  auto defocus_radius = focus_dist * tan(DEG2RAD * defocus_angle / 2);
+  defocus_disk_u = u * defocus_radius;
+  defocus_disk_v = v * defocus_radius;
 }
 
 bool camera::update_state(float dt) {
@@ -134,4 +140,9 @@ bool camera::update_camera_orientation() {
   look_at_point = camera_position + unit_vector(direction);
 
   return true;
+}
+
+vec3 camera::defocus_disk_sample() const {
+  auto p = random_in_unit_disk();
+  return camera_position + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
 }

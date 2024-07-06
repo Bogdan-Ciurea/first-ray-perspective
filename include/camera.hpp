@@ -60,11 +60,18 @@ class camera {
   float yaw = -90.0f;                    // Camera yaw angle
   float pitch = 0.0f;                    // Camera pitch angle
 
+  double defocus_angle = 0;  // Variation angle of rays through each pixel
+  double focus_dist =
+      10;  // Distance from camera lookfrom point to plane of perfect focus
+  vec3 defocus_disk_u;  // Defocus disk u vector
+  vec3 defocus_disk_v;  // Defocus disk v vector
+
   float movement_per_second = 1.0f;  // Camera movement speed
 
   void initialize();
   vec3 ray_color(ray& r, ObjectsList* world, const size_t depth = 1);
   bool update_camera_orientation();
+  vec3 defocus_disk_sample() const;
 };
 
 #endif
