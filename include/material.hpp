@@ -45,17 +45,38 @@ class lambertian : public material {
 
 class metal : public material {
  public:
-  metal(const vec3& albedo) : albedo(albedo) {}
+  metal(const vec3& albedo, const float& fuzz = 0)
+      : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1) {}
 
   bool scatter(ray& r_in, const hit_record& rec, vec3& attenuation,
                ray& scattered) const override {
-    scattered = r_in.reflect(rec.normal, rec.p);
+    scattered = r_in.reflect(rec.normal, rec.p, fuzz);
     attenuation = albedo;
-    return true;
+    return dot(scattered.direction(), rec.normal) > 0;
   }
 
  private:
   vec3 albedo;
+  float fuzz;
+};
+
+class dielectric : public material {
+ public:
+  dielectric(double refraction_index) : refraction_index(refraction_index) {}
+
+  bool scatter(ray& r_in, const hit_record& rec, vec3& attenuation,
+               ray& scattered) const override {
+    attenuation = vec3(1.0, 1.0, 1.0);
+    double ri = rec.front_face ? (1.0 / refraction_index) : refraction_index;
+
+    scattered = r_in.refract(rec.normal, rec.p, ri);
+    return true;
+  }
+
+ private:
+  // Refractive index in vacuum or air, or the ratio of the material's
+  // refractive index over the refractive index of the enclosing media
+  double refraction_index;
 };
 
 #endif

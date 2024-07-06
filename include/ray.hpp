@@ -39,7 +39,8 @@ class ray {
    * @param intersection_point The coordinates of the intersection point
    * @return vec3 The reflected ray
    */
-  ray reflect(const vec3& normal, const vec3& intersection_point) const;
+  ray reflect(const vec3& normal, const vec3& intersection_point,
+              const float& fuzz) const;
 
   /**
    * @brief Function that constructs a refracted ray from an intersection point
@@ -53,18 +54,20 @@ class ray {
               double etai_over_etat) const;
 
  private:
-  vec3 orig;
-  vec3 dir;
+  vec3 orig;  // Origin of the ray
+  vec3 dir;   // Direction of the ray
+
+  float schlick(float cosine, float ref_idx) const;
 };
 
 class material;
 
 class hit_record {
  public:
-  vec3 p;
-  vec3 normal;
-  double t;
-  bool front_face;
+  vec3 p;           // Point of intersection
+  vec3 normal;      // Normal at the intersection point
+  double t;         // Distance from the ray origin
+  bool front_face;  // True if the ray intersects the front face of the object
   std::shared_ptr<material> mat_ptr;
 
   /**

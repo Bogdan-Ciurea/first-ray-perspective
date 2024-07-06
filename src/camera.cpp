@@ -34,9 +34,11 @@ vec3 camera::ray_color(ray& r, ObjectsList* world, const size_t depth) {
                        rec)) {
     ray scattered;
     vec3 attenuation;
-    if (rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
+    // If the ray scatters, recursively call the function
+    if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
       return attenuation * ray_color(scattered, world, depth - 1);
-    }
+
+    // If the ray does not scatter, return black
     vec3(0, 0, 0);
   }
 
