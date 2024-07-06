@@ -23,25 +23,18 @@ int main() {
 
   // World
   std::cout << "Creating world" << std::endl;
-  ObjectsList world = ObjectsList();
+  ObjectsList world;
 
   world.add(make_shared<Sphere>(vec3(0, 0, -1), 0.5));
   world.add(make_shared<Sphere>(vec3(1, 0, -1), 0.5));
   world.add(make_shared<Sphere>(vec3(0, -100.5, -1), 100));
 
   RaytraceWindow window =
-      RaytraceWindow(screen_width, screen_height, "Raytracing");
+      RaytraceWindow(screen_width, screen_height, "First Ray Perspective");
 
-  window.set_world(world);
+  window.set_world(&world);
 
-#ifdef USE_OPENMP
-  int nthreads = omp_get_num_threads();
-  std::cout << "Number of threads = " << nthreads << std::endl;
-#endif
   window.draw();
-
-  window.~RaytraceWindow();
-  world.~ObjectsList();
 
   return 0;
 }

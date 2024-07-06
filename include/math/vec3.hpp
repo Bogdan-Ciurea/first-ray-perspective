@@ -85,8 +85,21 @@ class vec3 {
     return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
   }
 
-  friend std::ostream &operator<<(std::ostream &out, const vec3 &v);
-  friend std::istream &operator>>(std::istream &in, vec3 &v);
+  friend std::ostream &operator<<(std::ostream &out, const vec3 &v) {
+    return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
+  }
+  friend std::istream &operator>>(std::istream &in, vec3 &v) {
+    return in >> v.e[0] >> v.e[1] >> v.e[2];
+  }
+
+  Color to_color(const float mult = 1) const {
+    uchar r = clamp(abs(e[0]) * mult, 0, 255);
+    uchar g = clamp(abs(e[1]) * mult, 0, 255);
+    uchar b = clamp(abs(e[2]) * mult, 0, 255);
+    uchar a = 255;
+
+    return Color{r, g, b, a};
+  }
 
   std::array<float, 3> e;
 };
@@ -123,10 +136,9 @@ inline float dot(const vec3 &v1, const vec3 &v) {
   return v1.e[0] * v.e[0] + v1.e[1] * v.e[1] + v1.e[2] * v.e[2];
 }
 
-inline vec3 cross(const vec3 &v1, const vec3 &v) {
-  return vec3((v1.e[1] * v.e[2] - v1.e[2] * v.e[1]),
-              (-(v1.e[0] * v.e[2] - v1.e[2] * v.e[0])),
-              (v1.e[0] * v.e[1] - v1.e[1] * v.e[0]));
+inline vec3 cross(const vec3 &v1, const vec3 &v2) {
+  return vec3((v1[1] * v2[2] - v1[2] * v2[1]), (v1[2] * v2[0] - v1[0] * v2[2]),
+              (v1[0] * v2[1] - v1[1] * v2[0]));
 }
 
 inline vec3 unit_vector(const vec3 &v) {
@@ -137,17 +149,5 @@ inline vec3 unit_vector(const vec3 &v) {
 
   return vec3(v.e[0] / length, v.e[1] / length, v.e[2] / length);
 }
-
-/**
- * @brief Create a color object. Keep in mind that you might want to scale the
- * color values by 255 when using this function.
- *
- * @param r  The red component
- * @param g  The green component
- * @param b  The blue component
- * @param a  The alpha component
- * @return Color  The color object
- */
-Color create_color(int r, int g, int b, int a = 255);
 
 #endif  // VEC3_HPP
