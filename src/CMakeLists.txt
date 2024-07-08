@@ -1,7 +1,5 @@
 # Set the source files for the library
 set(SOURCE_FILES
-  math/mat4.cpp
-
   # Add more source files here
   objects/ObjectsList.cpp
   objects/Sphere.cpp

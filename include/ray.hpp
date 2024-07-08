@@ -68,7 +68,7 @@ class hit_record {
   vec3 normal;      // Normal at the intersection point
   double t;         // Distance from the ray origin
   bool front_face;  // True if the ray intersects the front face of the object
-  std::shared_ptr<material> mat_ptr;
+  std::shared_ptr<material> mat_ptr;  // Material of the object that was hit
 
   /**
    * @brief Set the face normal object

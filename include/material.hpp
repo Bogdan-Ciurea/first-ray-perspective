@@ -18,14 +18,33 @@ class material {
  public:
   virtual ~material() = default;
 
+  /**
+   * @brief Function that scatters the ray on the object
+   *
+   * @param r_in The ray that hits the object
+   * @param rec  The hit record
+   * @param attenuation  The attenuation of the ray
+   * @param scattered  The scattered ray
+   * @return true  If the ray scatters
+   * @return false  If the ray does not scatter
+   */
   virtual bool scatter(ray& r_in, const hit_record& rec, vec3& attenuation,
                        ray& scattered) const {
     return false;
   }
 };
 
+/**
+ * @brief Class that represents a lambertian material
+ *
+ */
 class lambertian : public material {
  public:
+  /**
+   * @brief Construct a new lambertian object
+   *
+   * @param a  The albedo (aka Color) of the material
+   */
   lambertian(const vec3& a) : albedo(a) {}
 
   bool scatter(ray& r_in, const hit_record& rec, vec3& attenuation,
@@ -43,8 +62,19 @@ class lambertian : public material {
   vec3 albedo;
 };
 
+/**
+ * @brief Class that represents a metal material
+ *
+ */
 class metal : public material {
  public:
+  /**
+   * @brief Construct a new metal object
+   *
+   * @param albedo  The albedo (aka Color) of the material
+   * @param fuzz  The fuzziness of the material or the fuzziness of the
+   * reflected rays
+   */
   metal(const vec3& albedo, const float& fuzz = 0)
       : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1) {}
 
@@ -60,8 +90,17 @@ class metal : public material {
   float fuzz;
 };
 
+/**
+ * @brief Class that represents a dielectric (aka glass) material
+ *
+ */
 class dielectric : public material {
  public:
+  /**
+   * @brief Construct a new dielectric object
+   *
+   * @param refraction_index  The refractive index of the material
+   */
   dielectric(double refraction_index) : refraction_index(refraction_index) {}
 
   bool scatter(ray& r_in, const hit_record& rec, vec3& attenuation,

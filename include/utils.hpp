@@ -49,7 +49,7 @@ const double infinity = std::numeric_limits<double>::infinity();
 
 inline double random_double(float min = 0, float max = 1) {
   // Returns a random real in [0,1).
-  const double rand = (double)GetRandomValue(0, 100000) / 100000.0;
+  const double rand = (double)GetRandomValue(0, 1000) / 1000.0;
   return min + (max - min) * rand;
 }
 
@@ -58,28 +58,5 @@ inline double clamp(double x, double min, double max) {
   if (x > max) return max;
   return x;
 }
-
-// Operator overloading for Color addition
-inline Color operator+(const Color& c1, const Color& c2) {
-  uchar r = (uchar)clamp(c1.r + c2.r, 0.0f, 255.0f);
-  uchar g = (uchar)clamp(c1.g + c2.g, 0.0f, 255.0f);
-  uchar b = (uchar)clamp(c1.b + c2.b, 0.0f, 255.0f);
-  uchar a = (uchar)clamp(std::max(c1.a, c2.a), 0.0f, 255.0f);
-
-  return Color{r, g, b, a};
-}
-
-// Operator overloading for Color multiplication with a float
-inline Color operator*(float f, const Color& c) {
-  uchar r = (uchar)clamp(f * c.r, 0.0f, 255.0f);
-  uchar g = (uchar)clamp(f * c.g, 0.0f, 255.0f);
-  uchar b = (uchar)clamp(f * c.b, 0.0f, 255.0f);
-  uchar a = (uchar)clamp(c.a, 0.0f, 255.0f);
-
-  return Color{r, g, b, a};
-}
-
-// Operator overloading for Color divider with a float
-inline Color operator/(const Color& c, float f) { return (1 / f) * c; }
 
 #endif  // UTILS_HPP

@@ -18,7 +18,21 @@ Color vec3_to_color(const vec3& v);
 
 class camera {
  public:
+  /**
+   * @brief Construct a new camera object.
+   * Will initialize the camera with default values
+   * screen_height = 100, screen_width = 100, max_depth = 10
+   *
+   */
   camera();
+
+  /**
+   * @brief Construct a new camera object
+   *
+   * @param image_width The width of the rendered image
+   * @param screen_height The height of the rendered image
+   * @param max_depth The maximum depth of the ray
+   */
   camera(const size_t image_width, const size_t screen_height,
          const size_t max_depth);
 
@@ -28,6 +42,21 @@ class camera {
    */
   ~camera() {}
 
+  /**
+   * @brief Function that generates a ray from the camera to a pixel on the
+   * screen. The function returns the color of the pixel that the ray
+   * intersects with.
+   *
+   * @param world The list of objects in the scene
+   * @param pixel_width The "index" of the pixel on the x-axis. The value should
+   * be between 0 and screen_width but can be a floating point number as we are
+   * using anti-aliasing.
+   * @param pixel_height The "index" of the pixel on the y-axis. The value
+   * should be between 0 and screen_height but can be a floating point number as
+   * we are using anti-aliasing.
+   *
+   * @return vec3 The color of the pixel that the ray intersects with
+   */
   Color send_ray(ObjectsList* world, const double pixel_width,
                  const double pixel_height);
 
@@ -68,9 +97,42 @@ class camera {
 
   float movement_per_second = 1.0f;  // Camera movement speed
 
+  /**
+   * @brief Function to initialize the camera's parameters based on the
+   * viewport size and camera position. This  function is called once at the
+   * beginning of the program. Furthermore, it is also called when the camera
+   * is moved as the camera's position changes.
+   *
+   */
   void initialize();
+
+  /**
+   * @brief Function that takes a ray as input and returns the color of the
+   * pixel that the ray intersects with. The function is recursive and will
+   * continue to call itself until the maximum depth is reached.
+   *
+   * @param r The ray to trace
+   * @param world The list of objects in the scene
+   * @param depth The current depth of the ray
+   *
+   * @return vec3 The color of the pixel that the ray intersects with
+   */
   vec3 ray_color(ray& r, ObjectsList* world, const size_t depth = 1);
+
+  /**
+   * @brief Function that updates the camera's orientation based on the
+   * keyboard input. The function is called every frame and updates the camera's
+   * position based on the input.
+   *
+   */
   bool update_camera_orientation();
+
+  /**
+   * @brief Function that returns a random point on the defocus disk. The
+   * function is used to simulate the defocus effect of the camera.
+   *
+   * @return vec3 The random point on the defocus disk
+   */
   vec3 defocus_disk_sample() const;
 };
 
