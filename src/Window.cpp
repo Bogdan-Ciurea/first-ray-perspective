@@ -19,8 +19,7 @@ RaytraceWindow::RaytraceWindow(const size_t screen_width,
   InitWindow(screen_width, screen_height, title);
   SetTargetFPS(target_fps);
 
-  shuffled_index_array =
-      std::vector<size_t>(screen_width * screen_height * rays_per_pixel);
+  shuffled_index_array = std::vector<size_t>(screen_width * screen_height);
   std::iota(shuffled_index_array.begin(), shuffled_index_array.end(), 0);
   shuffle_indices(shuffled_index_array, 0);
 
@@ -31,7 +30,7 @@ RaytraceWindow::RaytraceWindow(const size_t screen_width,
 RaytraceWindow::~RaytraceWindow() {
   CloseWindow();
   cam.~camera();
-  delete[] pixels;
+  // delete[] pixels;
 }
 
 void RaytraceWindow::draw() {
@@ -68,28 +67,49 @@ void RaytraceWindow::draw() {
 #endif
     }
 
-    const bool is_done =
-        start_index >= screen_width * screen_height * rays_per_pixel;
+    const bool is_done = current_renders >= max_renders + 1;
     if (!is_done) {
-      // Calculate which pixels to update
-      std::vector<size_t> selected_elements =
-          select_random_samples(total_samples, start_index, rays_to_send);
-
+      const size_t end_index =
+          start_index + rays_to_send >= shuffled_index_array.size()
+              ? shuffled_index_array.size()
+              : start_index + rays_to_send;
       // Calculate each pixel color
       // If we are using OpenMP, we can parallelize the loop
 #ifdef USE_OPENMP
 #pragma omp parallel for schedule(dynamic)
 #endif
-      for (size_t f = 0; f < selected_elements.size(); f++) {
-        const size_t index = selected_elements[f];
-        double j = index / rays_per_pixel / screen_width;
-        double i = index / rays_per_pixel % screen_width;
+      for (size_t f = start_index; f < end_index; f++) {
+        const size_t index = shuffled_index_array[f];
+        double j = index / screen_width;
+        double i = index % screen_width;
 
         // Now randomise the ray a bit
         i += random_double() - 0.5;
         j += random_double() - 0.5;
 
-        pixels[index] = cam.send_ray(world, i, j);
+        vec3 color = cam.send_ray(world, i, j);
+
+        // We already calculate everything in float, so we just do gamma
+        // correction before putting it integer format
+        // Linear to Gamma: 255 * pow(linearvalue / 255 (if in Color), 1 / 2.2)
+        color.e[0] = pow(color.r(), 1 / 2.2f);
+        color.e[1] = pow(color.g(), 1 / 2.2f);
+        color.e[2] = pow(color.b(), 1 / 2.2f);
+
+        const vec3 old_color =
+            vec3(pixels[index].r, pixels[index].g, pixels[index].b) / 255.0f;
+
+        const float weight = 1.0f / (current_renders + 1);
+        color = (1 - weight) * old_color + weight * color;
+
+        pixels[index] = color.to_color(255);
+      }
+
+      start_index = end_index;
+
+      if (start_index >= shuffled_index_array.size()) {
+        start_index = 0;
+        current_renders++;
       }
     }
 
@@ -112,32 +132,9 @@ void RaytraceWindow::draw_pixels() {
   Color* image_pixels = (Color*)image.data;
 
   // Loop through each pixel
-  for (size_t j = 0; j < screen_height; j++) {
-    for (size_t i = 0; i < screen_width; i++) {
-      vec4 pixel_color(0, 0, 0, 255);
-      for (size_t k = 0; k < rays_per_pixel; k++) {
-        int index = (j * screen_width + i) * rays_per_pixel + k;
-        if (index < screen_width * screen_height * rays_per_pixel) {
-          const Color sample = pixels[index];
-          pixel_color += vec4(sample.r, sample.g, sample.b, 0);
-        }
-      }
-
-      // Average the color
-      pixel_color /= rays_per_pixel;
-      pixel_color.e[3] = 255;
-
-      // We already calculate everything in float, so we just do gamma
-      // correction before putting it integer format.
-      // Linear to Gamma: 255 * pow(linearvalue / 255, 1 / 2.2)
-      pixel_color.e[0] = pow(pixel_color.r() / 255, 1 / 2.2f);
-      pixel_color.e[1] = pow(pixel_color.g() / 255, 1 / 2.2f);
-      pixel_color.e[2] = pow(pixel_color.b() / 255, 1 / 2.2f);
-
-      // Assign the averaged color to the final pixel position
-      image_pixels[j * screen_width + i] = pixel_color.to_color(255);
-    }
-  }
+  for (size_t j = 0; j < screen_height; j++)
+    for (size_t i = 0; i < screen_width; i++)
+      image_pixels[j * screen_width + i] = pixels[j * screen_width + i];
 
   SetTraceLogLevel(LOG_NONE);  // Disable logging as it will be spammed
   // Load texture from the updated image data
@@ -153,29 +150,15 @@ void RaytraceWindow::draw_pixels() {
 }
 
 void RaytraceWindow::reset_pixels() {
-  const size_t total_pixels = screen_width * screen_height * rays_per_pixel;
+  const size_t total_pixels = screen_width * screen_height;
   // All pixels related to the window
-  if (!pixels) pixels = new Color[total_pixels];
-  if (pixels == nullptr) {
-    std::cerr << "Failed to allocate memory for pixels" << std::endl;
-    exit(1);
-  }
+  if (pixels.size() != total_pixels) pixels.resize(total_pixels);
+
   // Make every pixel black
   for (size_t i = 0; i < total_pixels; i++) pixels[i] = Color{0, 0, 0, 255};
 
-  // We already have a shuffled array of indices so we can copy it
-  // We are going to copy the shuffled array of indices to the total elements
-  // array but not exactly from the start but with a random offset
-  // This way we can ensure that we are not going to send the same rays
-  // every time
-  total_samples.clear();
-  total_samples.reserve(total_pixels);
-  const int offset = GetRandomValue(0, total_pixels);
-  for (size_t i = 0; i < total_pixels; i++) {
-    total_samples[i] = shuffled_index_array[(i + offset) % total_pixels];
-  }
-
   start_index = 0;
+  current_renders = 0;
 }
 
 double RaytraceWindow::get_ray_random_duration() {
@@ -195,23 +178,4 @@ void RaytraceWindow::shuffle_indices(std::vector<size_t>& indices,
     std::uniform_int_distribution<> dis(i, indices.size() - 1);
     std::swap(indices[i], indices[dis(gen)]);
   }
-}
-
-std::vector<size_t> RaytraceWindow::select_random_samples(
-    std::vector<size_t>& indices, size_t& start_index, size_t num_to_select) {
-  std::vector<size_t> result;
-  result.reserve(num_to_select);
-
-  size_t end_index = start_index + num_to_select;
-
-  if (end_index > shuffled_index_array.size()) {
-    end_index = shuffled_index_array.size();
-    num_to_select = end_index - start_index;
-  }
-
-  for (size_t i = start_index; i < end_index; ++i) result.push_back(indices[i]);
-
-  start_index = end_index;
-
-  return result;
 }

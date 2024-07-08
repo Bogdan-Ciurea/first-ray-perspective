@@ -57,8 +57,8 @@ class camera {
    *
    * @return vec3 The color of the pixel that the ray intersects with
    */
-  Color send_ray(ObjectsList* world, const double pixel_width,
-                 const double pixel_height);
+  vec3 send_ray(ObjectsList* world, const double pixel_width,
+                const double pixel_height);
 
   double aspect_ratio = 1.0;  // Ratio of image width over height
   int screen_width = 100;     // Rendered image width in pixel count

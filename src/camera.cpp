@@ -15,15 +15,15 @@ camera::camera(const size_t image_width, const size_t screen_height,
   initialize();
 }
 
-Color camera::send_ray(ObjectsList* world, const double pixel_width,
-                       const double pixel_height) {
+vec3 camera::send_ray(ObjectsList* world, const double pixel_width,
+                      const double pixel_height) {
   auto pixel_center = pixel00_loc + (pixel_width * pixel_delta_u) +
                       (pixel_height * pixel_delta_v);
   auto ray_origin =
       (defocus_angle <= 0) ? camera_position : defocus_disk_sample();
   auto ray_direction = pixel_center - camera_position;
   ray r(ray_origin, ray_direction);
-  return ray_color(r, world, max_depth).to_color(255);
+  return ray_color(r, world, max_depth);
 }
 
 vec3 camera::ray_color(ray& r, ObjectsList* world, const size_t depth) {
