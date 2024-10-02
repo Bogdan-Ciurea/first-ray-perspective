@@ -13,6 +13,7 @@
 #define VEC3_HPP
 
 #include "utils.hpp"
+#include <array>
 
 class vec3 {
  public:
@@ -93,21 +94,21 @@ class vec3 {
   }
 
   Color to_color(const float mult = 1) const {
-    uchar r = clamp(abs(e[0]) * mult, 0, 255);
-    uchar g = clamp(abs(e[1]) * mult, 0, 255);
-    uchar b = clamp(abs(e[2]) * mult, 0, 255);
+    uchar r = (uchar)clamp(abs(e[0]) * mult, 0, 255);
+    uchar g = (uchar)clamp(abs(e[1]) * mult, 0, 255);
+    uchar b = (uchar)clamp(abs(e[2]) * mult, 0, 255);
     uchar a = 255;
 
     return Color{r, g, b, a};
   }
 
   static vec3 random() {
-    return vec3(random_double(), random_double(), random_double());
+    return vec3(random_float(), random_float(), random_float());
   }
 
   static vec3 random(float min, float max) {
-    return vec3(random_double(min, max), random_double(min, max),
-                random_double(min, max));
+    return vec3(random_float(min, max), random_float(min, max),
+                random_float(min, max));
   }
 
   bool near_zero() const {
@@ -188,7 +189,7 @@ inline vec3 random_on_hemisphere(const vec3 &normal) {
 
 inline vec3 random_in_unit_disk() {
   while (true) {
-    auto p = vec3(random_double(-1, 1), random_double(-1, 1), 0);
+    auto p = vec3(random_float(-1, 1), random_float(-1, 1), 0);
     if (p.length_squared() < 1) return p;
   }
 }

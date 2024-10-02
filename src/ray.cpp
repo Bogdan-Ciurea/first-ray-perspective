@@ -23,17 +23,17 @@ ray ray::reflect(const vec3& normal, const vec3& intersection_point,
 }
 
 ray ray::refract(const vec3& normal, const vec3& intersection_point,
-                 double etai_over_etat) const {
+                 float etai_over_etat) const {
   vec3 unit_direction = unit_vector(dir);
-  double cos_theta = fmin(dot(-unit_direction, normal), 1.0);
-  double sin_theta = sqrt(1.0 - cos_theta * cos_theta);
+  float cos_theta = (float)fmin(dot(-unit_direction, normal), 1.0);
+  float sin_theta = (float)sqrt(1.0 - cos_theta * cos_theta);
 
   if (etai_over_etat * sin_theta > 1.0 ||
-      random_double() < schlick(cos_theta, etai_over_etat))
+      random_float() < schlick(cos_theta, etai_over_etat))
     return reflect(normal, intersection_point, 0.0);
 
   vec3 r_out_perp = etai_over_etat * (unit_direction + cos_theta * normal);
-  vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_squared())) * normal;
+  vec3 r_out_parallel = -(float)sqrt(fabs(1.0 - r_out_perp.length_squared())) * normal;
   return ray(intersection_point, r_out_perp + r_out_parallel);
 }
 
@@ -41,5 +41,5 @@ float ray::schlick(float cosine, float ref_idx) const {
   // Use Schlick's approximation for reflectance
   float r0 = (1 - ref_idx) / (1 + ref_idx);
   r0 = r0 * r0;
-  return r0 + (1 - r0) * pow((1 - cosine), 5);
+  return r0 + (1 - r0) * (float)pow((1 - cosine), 5);
 }

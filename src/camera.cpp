@@ -7,16 +7,16 @@ camera::camera() {
   initialize();
 }
 
-camera::camera(const size_t image_width, const size_t screen_height,
+camera::camera(const int screen_width, const int screen_height,
                const size_t max_depth)
     : screen_height(screen_height),
-      screen_width(image_width),
+      screen_width(screen_width),
       max_depth(max_depth) {
   initialize();
 }
 
-vec3 camera::send_ray(ObjectsList* world, const double pixel_width,
-                      const double pixel_height) {
+vec3 camera::send_ray(ObjectsList* world, const float pixel_width,
+                      const float pixel_height) {
   auto pixel_center = pixel00_loc + (pixel_width * pixel_delta_u) +
                       (pixel_height * pixel_delta_v);
   auto ray_origin =
@@ -45,8 +45,8 @@ vec3 camera::ray_color(ray& r, ObjectsList* world, const size_t depth) {
   }
 
   vec3 unit_direction = unit_vector(r.direction());
-  float t = 0.5 * (unit_direction.y() + 1.0);
-  return (float)(1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
+  float t = 0.5f * (unit_direction.y() + 1.0f);
+  return (1.0f - t) * vec3(1.0f, 1.0f, 1.0f) + t * vec3(0.5f, 0.7f, 1.0f);
 }
 
 void camera::initialize() {
@@ -54,7 +54,7 @@ void camera::initialize() {
   auto h = tan(theta / 2);
   auto viewport_height = 2 * h * focus_dist;
   auto viewport_width =
-      viewport_height * (double(screen_width) / screen_height);
+      viewport_height * (float(screen_width) / screen_height);
 
   w = unit_vector(camera_position - look_at_point);
   u = unit_vector(cross(vup, w));
@@ -63,8 +63,8 @@ void camera::initialize() {
   vec3 viewport_u = viewport_width * u;
   vec3 viewport_v = viewport_height * -v;
 
-  pixel_delta_u = viewport_u / screen_width;
-  pixel_delta_v = viewport_v / screen_height;
+  pixel_delta_u = viewport_u / (float)screen_width;
+  pixel_delta_v = viewport_v / (float)screen_height;
 
   auto viewport_upper_left =
       camera_position - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
@@ -84,7 +84,7 @@ bool camera::update_state(float dt) {
   bool moved = update_camera_orientation();
 
   const float speed =
-      movement_per_second * dt * (IsKeyDown(KEY_LEFT_SHIFT) ? 5.0 : 1.0);
+      movement_per_second * dt * (IsKeyDown(KEY_LEFT_SHIFT) ? 5.0f : 1.0f);
 
   vec3 front = unit_vector(look_at_point - camera_position);
   vec3 right = unit_vector(cross(front, vup));

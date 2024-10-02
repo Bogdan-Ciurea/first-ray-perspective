@@ -101,12 +101,12 @@ class dielectric : public material {
    *
    * @param refraction_index  The refractive index of the material
    */
-  dielectric(double refraction_index) : refraction_index(refraction_index) {}
+  dielectric(float refraction_index) : refraction_index(refraction_index) {}
 
   bool scatter(ray& r_in, const hit_record& rec, vec3& attenuation,
                ray& scattered) const override {
     attenuation = vec3(1.0, 1.0, 1.0);
-    double ri = rec.front_face ? (1.0 / refraction_index) : refraction_index;
+    float ri = rec.front_face ? (1.0f / refraction_index) : refraction_index;
 
     scattered = r_in.refract(rec.normal, rec.p, ri);
     return true;
@@ -115,7 +115,7 @@ class dielectric : public material {
  private:
   // Refractive index in vacuum or air, or the ratio of the material's
   // refractive index over the refractive index of the enclosing media
-  double refraction_index;
+  float refraction_index;
 };
 
 #endif

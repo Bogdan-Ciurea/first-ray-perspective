@@ -30,7 +30,7 @@ class ray {
    * @param t The distance from the origin
    * @return vec3  The point at distance t from the origin
    */
-  vec3 at(double t) const { return orig + t * dir; }
+  vec3 at(float t) const { return orig + t * dir; }
 
   /**
    * @brief Function that constructs a reflected ray from an intersection point
@@ -51,7 +51,7 @@ class ray {
    * @return vec3 The refracted ray
    */
   ray refract(const vec3& normal, const vec3& intersection_point,
-              double etai_over_etat) const;
+              float etai_over_etat) const;
 
  private:
   vec3 orig;  // Origin of the ray
@@ -66,7 +66,7 @@ class hit_record {
  public:
   vec3 p;           // Point of intersection
   vec3 normal;      // Normal at the intersection point
-  double t;         // Distance from the ray origin
+  float t;         // Distance from the ray origin
   bool front_face;  // True if the ray intersects the front face of the object
   std::shared_ptr<material> mat_ptr;  // Material of the object that was hit
 

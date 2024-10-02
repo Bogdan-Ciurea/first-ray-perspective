@@ -58,7 +58,7 @@ class ObjectsList : public Object {
                  hit_record& rec);
 
   void move(const vec3& offset);
-  void rotate(const vec3& axis, double angle);
+  void rotate(const vec3& axis, float angle);
 
  private:
   vector<shared_ptr<Object>> objects;

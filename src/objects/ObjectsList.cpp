@@ -37,7 +37,7 @@ void ObjectsList::move(const vec3& offset) {
   }
 }
 
-void ObjectsList::rotate(const vec3& axis, double angle) {
+void ObjectsList::rotate(const vec3& axis, float angle) {
   for (const auto& object : objects) {
     object->rotate(axis, angle);
   }

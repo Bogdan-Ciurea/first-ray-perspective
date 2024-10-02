@@ -23,7 +23,7 @@ class Sphere : public Object {
    * @param radius The radius of the sphere
    * @param material The material of the sphere
    */
-  Sphere(const vec3& center, double radius,
+  Sphere(const vec3& center, float radius,
          const std::shared_ptr<material> material);
 
   /**
@@ -49,9 +49,9 @@ class Sphere : public Object {
   /**
    * @brief Get the radius of the sphere
    *
-   * @return double The radius of the sphere
+   * @return float The radius of the sphere
    */
-  double get_radius();
+  float get_radius();
 
   /**
    * @brief Get the intersection of the sphere
@@ -71,11 +71,11 @@ class Sphere : public Object {
    * @param offset The offset to move the sphere by
    */
   void move(const vec3& offset) { center += offset; }
-  void rotate(const vec3& axis, double angle) {}
+  void rotate(const vec3& axis, float angle) {}
 
  private:
   vec3 center;
-  double radius;
+  float radius;
   std::shared_ptr<material> mat;
 };
 

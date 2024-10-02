@@ -29,11 +29,11 @@ class camera {
   /**
    * @brief Construct a new camera object
    *
-   * @param image_width The width of the rendered image
+   * @param screen_width The width of the rendered image
    * @param screen_height The height of the rendered image
    * @param max_depth The maximum depth of the ray
    */
-  camera(const size_t image_width, const size_t screen_height,
+  camera(const int screen_width, const int screen_height,
          const size_t max_depth);
 
   /**
@@ -57,10 +57,10 @@ class camera {
    *
    * @return vec3 The color of the pixel that the ray intersects with
    */
-  vec3 send_ray(ObjectsList* world, const double pixel_width,
-                const double pixel_height);
+  vec3 send_ray(ObjectsList* world, const float pixel_width,
+                const float pixel_height);
 
-  double aspect_ratio = 1.0;  // Ratio of image width over height
+  float aspect_ratio = 1.0;  // Ratio of image width over height
   int screen_width = 100;     // Rendered image width in pixel count
   bool is_moving = false;     // Camera movement flag
 
@@ -89,8 +89,8 @@ class camera {
   float yaw = -90.0f;                    // Camera yaw angle
   float pitch = 0.0f;                    // Camera pitch angle
 
-  double defocus_angle = 0;  // Variation angle of rays through each pixel
-  double focus_dist =
+  float defocus_angle = 0;  // Variation angle of rays through each pixel
+  float focus_dist =
       10;  // Distance from camera lookfrom point to plane of perfect focus
   vec3 defocus_disk_u;  // Defocus disk u vector
   vec3 defocus_disk_v;  // Defocus disk v vector

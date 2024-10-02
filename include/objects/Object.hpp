@@ -42,7 +42,7 @@ class Object {
                          hit_record& rec) = 0;
 
   virtual void move(const vec3& offset) = 0;
-  virtual void rotate(const vec3& axis, double angle) = 0;
+  virtual void rotate(const vec3& axis, float angle) = 0;
 };
 
 #endif  // OBJECT_HPP
