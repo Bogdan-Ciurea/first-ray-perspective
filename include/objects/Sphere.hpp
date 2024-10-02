@@ -23,7 +23,8 @@ class Sphere : public Object {
    * @param radius The radius of the sphere
    * @param material The material of the sphere
    */
-  Sphere(const vec3& center, double radius);
+  Sphere(const vec3& center, float radius,
+         const std::shared_ptr<material> material);
 
   /**
    * @brief Destroy the Sphere object
@@ -48,9 +49,9 @@ class Sphere : public Object {
   /**
    * @brief Get the radius of the sphere
    *
-   * @return double The radius of the sphere
+   * @return float The radius of the sphere
    */
-  double get_radius();
+  float get_radius();
 
   /**
    * @brief Get the intersection of the sphere
@@ -61,7 +62,8 @@ class Sphere : public Object {
    * @param rec The hit record
    * @return bool True if the ray intersects the sphere, false otherwise
    */
-  bool intersect(const ray& r, double t_min, double t_max, hit_record& rec);
+  bool intersect(const ray& r, const float t_min, const float t_max,
+                 hit_record& rec);
 
   /**
    * @brief Move the sphere by a given offset
@@ -69,12 +71,12 @@ class Sphere : public Object {
    * @param offset The offset to move the sphere by
    */
   void move(const vec3& offset) { center += offset; }
-  void rotate(const vec3& axis, double angle) {}
+  void rotate(const vec3& axis, float angle) {}
 
  private:
   vec3 center;
-  double radius;
-  // Material* material;
+  float radius;
+  std::shared_ptr<material> mat;
 };
 
 #endif  // SPHERE_HPP

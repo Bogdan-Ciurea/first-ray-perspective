@@ -19,7 +19,7 @@
 
 class RaytraceWindow {
  public:
-  RaytraceWindow(const size_t screen_width, const size_t screen_height,
+  RaytraceWindow(const int screen_width, const int screen_height,
                  const char* title);
 
   ~RaytraceWindow();
@@ -28,40 +28,26 @@ class RaytraceWindow {
   void set_world(ObjectsList* world) { this->world = world; }
 
  private:
-  uint rays_per_pixel = 5;
+  int current_renders = 0;
+  int max_renders = 10;
   uint target_fps = 30;
-  size_t start_index = 0;  // The starting index for the next selection (when
+  int start_index = 0;  // The starting index for the next selection (when
                            // selecting random colors)
 
-  const size_t screen_width;   // The dimensions of the window
-  const size_t screen_height;  // The dimensions of the window
+  const int screen_width;      // The dimensions of the window
+  const int screen_height;     // The dimensions of the window
   ObjectsList* world;          // The world that we are going to draw
   camera cam;                  // The camera object
-  Color* pixels;               // The array of pixels that we are going to draw
+  std::vector<Color> pixels;   // The array of pixels that we are going to draw
   Texture2D texture;  // The texture that we are going to draw (DrawPixel method
                       // is not efficient for large images)
 
-  std::vector<size_t> total_samples;  // The array that we are actually going
-                                      // to use
-  std::vector<size_t> shuffled_index_array;  // An array of shuffled indices
+  std::vector<int> shuffled_index_array;  // An array of shuffled indices
 
   void draw_pixels();
   void reset_pixels();
-  double get_ray_random_duration();
-  void shuffle_indices(std::vector<size_t>& indices, size_t start_index);
-
-  /**
-   * @brief Selects a specified number of random colors from the given colors
-   * array.
-   *
-   * @param indices Reference to a vector of indices representing the colors.
-   * @param start_index Reference to the starting index for the next selection.
-   * @param num_to_select Number of elements to select.
-   * @return std::vector<int> A vector of selected indices.
-   */
-  std::vector<size_t> select_random_samples(std::vector<size_t>& indices,
-                                            size_t& start_index,
-                                            size_t num_to_select);
+  float get_ray_random_duration();
+  void shuffle_indices(std::vector<int>& indices, int start_index);
 };
 
 #endif  // WINDOW_HPP

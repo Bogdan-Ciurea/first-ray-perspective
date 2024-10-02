@@ -13,8 +13,6 @@
 #define OBJECTSLIST_HPP
 
 #include "Object.hpp"
-#include "ray.hpp"
-#include "utils.hpp"
 
 class ObjectsList : public Object {
  public:
@@ -56,10 +54,11 @@ class ObjectsList : public Object {
    * @return bool True if the ray intersects any object in the list, false
    * otherwise
    */
-  bool intersect(const ray& r, double t_min, double t_max, hit_record& rec);
+  bool intersect(const ray& r, const float t_min, const float t_max,
+                 hit_record& rec);
 
   void move(const vec3& offset);
-  void rotate(const vec3& axis, double angle);
+  void rotate(const vec3& axis, float angle);
 
  private:
   vector<shared_ptr<Object>> objects;

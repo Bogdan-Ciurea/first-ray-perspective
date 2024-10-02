@@ -11,18 +11,17 @@
 
 #include "objects/Sphere.hpp"
 
-Sphere::Sphere(const vec3& center, double radius)
-    : center(center), radius(radius) {}
+Sphere::Sphere(const vec3& _center, float _radius,
+               std::shared_ptr<material> _mat)
+    : center(_center), radius(_radius), mat(_mat) {}
 
 Sphere::~Sphere() {}
 
-// Material* Sphere::get_material() { return material; }
-
 vec3 Sphere::get_center() { return center; }
 
-double Sphere::get_radius() { return radius; }
+float Sphere::get_radius() { return radius; }
 
-bool Sphere::intersect(const ray& r, double t_min, double t_max,
+bool Sphere::intersect(const ray& r, const float t_min, const float t_max,
                        hit_record& rec) {
   vec3 oc = r.origin() - center;
   float a = dot(r.direction(), r.direction());
@@ -34,14 +33,18 @@ bool Sphere::intersect(const ray& r, double t_min, double t_max,
     if (temp < t_max && temp > t_min) {
       rec.t = temp;
       rec.p = r.at(rec.t);
-      rec.normal = (rec.p - center) / radius;
+      vec3 outward_normal = (rec.p - center) / radius;
+      rec.set_face_normal(r, outward_normal);
+      rec.mat_ptr = mat;
       return true;
     }
     temp = (-b + sqrt(discriminant)) / a;
     if (temp < t_max && temp > t_min) {
       rec.t = temp;
       rec.p = r.at(rec.t);
-      rec.normal = (rec.p - center) / radius;
+      vec3 outward_normal = (rec.p - center) / radius;
+      rec.set_face_normal(r, outward_normal);
+      rec.mat_ptr = mat;
       return true;
     }
   }

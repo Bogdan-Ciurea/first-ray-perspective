@@ -13,7 +13,7 @@
 #ifndef OBJECT_HPP
 #define OBJECT_HPP
 
-#include "ray.hpp"
+#include "material.hpp"
 
 class Object {
  public:
@@ -38,11 +38,11 @@ class Object {
    * @param rec The hit record
    * @return bool True if the ray intersects the object, false otherwise
    */
-  virtual bool intersect(const ray& r, double t_min, double t_max,
+  virtual bool intersect(const ray& r, const float t_min, const float t_max,
                          hit_record& rec) = 0;
 
   virtual void move(const vec3& offset) = 0;
-  virtual void rotate(const vec3& axis, double angle) = 0;
+  virtual void rotate(const vec3& axis, float angle) = 0;
 };
 
 #endif  // OBJECT_HPP

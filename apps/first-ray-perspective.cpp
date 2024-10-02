@@ -22,12 +22,20 @@ int main() {
   screen_height = (screen_height < 1) ? 1 : screen_height;
 
   // World
-  std::cout << "Creating world" << std::endl;
   ObjectsList world;
 
-  world.add(make_shared<Sphere>(vec3(0, 0, -1), 0.5));
-  world.add(make_shared<Sphere>(vec3(1, 0, -1), 0.5));
-  world.add(make_shared<Sphere>(vec3(0, -100.5, -1), 100));
+  TraceLog(LOG_INFO, "Creating MATERIALS");
+  auto material_ground = make_shared<lambertian>(vec3(.8f, .8f, .0f));
+  auto material_center = make_shared<lambertian>(vec3(.1f, .2f, .5f));
+  auto material_left = make_shared<dielectric>(1.0f / 1.33f);
+  auto material_right = make_shared<metal>(vec3(.8f, .6f, 0.2f), .5f);
+
+  TraceLog(LOG_INFO, "Creating OBJECTS");
+  world.add(
+      make_shared<Sphere>(vec3(.0f, -100.5f, -1.0f), 100.0f, material_ground));
+  world.add(make_shared<Sphere>(vec3(.0f, .0f, -1.2f), .5f, material_center));
+  world.add(make_shared<Sphere>(vec3(-1.0f, .0f, -1.0f), .5f, material_left));
+  world.add(make_shared<Sphere>(vec3(1.0f, .0f, -1.0f), .5f, material_right));
 
   RaytraceWindow window =
       RaytraceWindow(screen_width, screen_height, "First Ray Perspective");

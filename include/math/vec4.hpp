@@ -109,10 +109,10 @@ class vec4 {
   }
 
   Color to_color(const float mult = 1) const {
-    uchar r = clamp(abs(e[0]) * mult, 0, 255);
-    uchar g = clamp(abs(e[1]) * mult, 0, 255);
-    uchar b = clamp(abs(e[2]) * mult, 0, 255);
-    uchar a = clamp(abs(e[3]) * mult, 0, 255);
+    uchar r = (uchar)clamp(abs(e[0]) * mult, 0, 255);
+    uchar g = (uchar)clamp(abs(e[1]) * mult, 0, 255);
+    uchar b = (uchar)clamp(abs(e[2]) * mult, 0, 255);
+    uchar a = (uchar)clamp(abs(e[3]) * mult, 0, 255);
 
     return Color{r, g, b, a};
   }

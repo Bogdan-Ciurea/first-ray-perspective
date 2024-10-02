@@ -13,6 +13,7 @@
 #define VEC3_HPP
 
 #include "utils.hpp"
+#include <array>
 
 class vec3 {
  public:
@@ -93,12 +94,28 @@ class vec3 {
   }
 
   Color to_color(const float mult = 1) const {
-    uchar r = clamp(abs(e[0]) * mult, 0, 255);
-    uchar g = clamp(abs(e[1]) * mult, 0, 255);
-    uchar b = clamp(abs(e[2]) * mult, 0, 255);
+    uchar r = (uchar)clamp(abs(e[0]) * mult, 0, 255);
+    uchar g = (uchar)clamp(abs(e[1]) * mult, 0, 255);
+    uchar b = (uchar)clamp(abs(e[2]) * mult, 0, 255);
     uchar a = 255;
 
     return Color{r, g, b, a};
+  }
+
+  static vec3 random() {
+    return vec3(random_float(), random_float(), random_float());
+  }
+
+  static vec3 random(float min, float max) {
+    return vec3(random_float(min, max), random_float(min, max),
+                random_float(min, max));
+  }
+
+  bool near_zero() const {
+    // Return true if the vector is close to zero in all dimensions.
+    auto s = 1e-8;
+    return (std::fabs(e[0]) < s) && (std::fabs(e[1]) < s) &&
+           (std::fabs(e[2]) < s);
   }
 
   std::array<float, 3> e;
@@ -147,7 +164,34 @@ inline vec3 unit_vector(const vec3 &v) {
     return vec3(0, 0, 0);
   }
 
-  return vec3(v.e[0] / length, v.e[1] / length, v.e[2] / length);
+  return v / length;
+}
+
+inline vec3 random_in_unit_sphere() {
+  while (true) {
+    auto p = vec3::random(-1, 1);
+    if (p.length_squared() < 1) return p;
+  }
+}
+
+inline vec3 random_unit_vector() {
+  return unit_vector(random_in_unit_sphere());
+}
+
+inline vec3 random_on_hemisphere(const vec3 &normal) {
+  vec3 on_unit_sphere = random_unit_vector();
+  if (dot(on_unit_sphere, normal) >
+      0.0)  // In the same hemisphere as the normal
+    return on_unit_sphere;
+  else
+    return -on_unit_sphere;
+}
+
+inline vec3 random_in_unit_disk() {
+  while (true) {
+    auto p = vec3(random_float(-1, 1), random_float(-1, 1), 0);
+    if (p.length_squared() < 1) return p;
+  }
 }
 
 #endif  // VEC3_HPP
