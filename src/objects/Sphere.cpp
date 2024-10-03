@@ -21,16 +21,17 @@ vec3 Sphere::get_center() { return center; }
 
 float Sphere::get_radius() { return radius; }
 
-bool Sphere::intersect(const ray& r, const float t_min, const float t_max,
+bool Sphere::intersect(const ray& r, const interval& interval,
                        hit_record& rec) {
   vec3 oc = r.origin() - center;
   float a = dot(r.direction(), r.direction());
   float b = dot(oc, r.direction());
   float c = dot(oc, oc) - radius * radius;
   float discriminant = b * b - a * c;
+
   if (discriminant > 0) {
     float temp = (-b - sqrt(discriminant)) / a;
-    if (temp < t_max && temp > t_min) {
+    if (interval.surrounds(temp)) {
       rec.t = temp;
       rec.p = r.at(rec.t);
       vec3 outward_normal = (rec.p - center) / radius;
@@ -39,7 +40,7 @@ bool Sphere::intersect(const ray& r, const float t_min, const float t_max,
       return true;
     }
     temp = (-b + sqrt(discriminant)) / a;
-    if (temp < t_max && temp > t_min) {
+    if (interval.surrounds(temp)) {
       rec.t = temp;
       rec.p = r.at(rec.t);
       vec3 outward_normal = (rec.p - center) / radius;

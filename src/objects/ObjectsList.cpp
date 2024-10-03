@@ -14,14 +14,14 @@ std::vector<std::shared_ptr<Object>> ObjectsList::get_objects() {
   return objects;
 }
 
-bool ObjectsList::intersect(const ray& r, const float t_min, const float t_max,
+bool ObjectsList::intersect(const ray& r, const interval& interval,
                             hit_record& rec) {
   hit_record temp_rec;
   bool hit_anything = false;
-  auto closest_so_far = t_max;
+  auto closest_so_far = interval.max;
 
   for (const auto& object : objects) {
-    if (object->intersect(r, t_min, closest_so_far, temp_rec)) {
+    if (object->intersect(r, interval, temp_rec)) {
       hit_anything = true;
       closest_so_far = temp_rec.t;
       rec = temp_rec;

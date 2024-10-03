@@ -29,7 +29,7 @@ class RaytraceWindow {
 
  private:
   int current_renders = 0;
-  int max_renders = 10;
+  int max_renders = 100;
   uint target_fps = 30;
   int start_index = 0;  // The starting index for the next selection (when
                            // selecting random colors)

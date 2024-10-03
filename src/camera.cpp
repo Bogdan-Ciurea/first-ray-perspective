@@ -32,8 +32,7 @@ vec3 camera::ray_color(ray& r, ObjectsList* world, const size_t depth) {
   }
 
   hit_record rec;
-  if (world->intersect(r, std::numeric_limits<float>::epsilon(), infinity,
-                       rec)) {
+  if (world->intersect(r, interval(.0f, infinity), rec)) {
     ray scattered;
     vec3 attenuation;
     // If the ray scatters, recursively call the function
@@ -53,8 +52,7 @@ void camera::initialize() {
   auto theta = vfov * DEG2RAD;
   auto h = tan(theta / 2);
   auto viewport_height = 2 * h * focus_dist;
-  auto viewport_width =
-      viewport_height * (float(screen_width) / screen_height);
+  auto viewport_width = viewport_height * (float(screen_width) / screen_height);
 
   w = unit_vector(camera_position - look_at_point);
   u = unit_vector(cross(vup, w));

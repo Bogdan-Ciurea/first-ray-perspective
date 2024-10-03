@@ -57,13 +57,11 @@ class Sphere : public Object {
    * @brief Get the intersection of the sphere
    *
    * @param r The ray to intersect with
-   * @param t_min The minimum t value
-   * @param t_max The maximum t value
+   * @param interval The interval in which the intersection should be
    * @param rec The hit record
    * @return bool True if the ray intersects the sphere, false otherwise
    */
-  bool intersect(const ray& r, const float t_min, const float t_max,
-                 hit_record& rec);
+  bool intersect(const ray& r, const interval& interval, hit_record& rec);
 
   /**
    * @brief Move the sphere by a given offset

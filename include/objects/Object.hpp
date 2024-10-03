@@ -14,6 +14,7 @@
 #define OBJECT_HPP
 
 #include "material.hpp"
+#include "math/interval.hpp"
 
 class Object {
  public:
@@ -33,12 +34,11 @@ class Object {
    * @brief Get the object's intersection
    *
    * @param r The ray to intersect with
-   * @param t_min The minimum t value
-   * @param t_max The maximum t value
+   * @param interval The interval in which the intersection should be
    * @param rec The hit record
    * @return bool True if the ray intersects the object, false otherwise
    */
-  virtual bool intersect(const ray& r, const float t_min, const float t_max,
+  virtual bool intersect(const ray& r, const interval& interval,
                          hit_record& rec) = 0;
 
   virtual void move(const vec3& offset) = 0;

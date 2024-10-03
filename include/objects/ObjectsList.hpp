@@ -48,14 +48,12 @@ class ObjectsList : public Object {
    * @brief Get the intersection of the objects in the list
    *
    * @param r The ray to intersect with
-   * @param t_min The minimum t value
-   * @param t_max The maximum t value
+   * @param interval The interval in which the intersection should be
    * @param rec The hit record
    * @return bool True if the ray intersects any object in the list, false
    * otherwise
    */
-  bool intersect(const ray& r, const float t_min, const float t_max,
-                 hit_record& rec);
+  bool intersect(const ray& r, const interval& interval, hit_record& rec);
 
   void move(const vec3& offset);
   void rotate(const vec3& axis, float angle);
