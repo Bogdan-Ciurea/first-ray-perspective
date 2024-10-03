@@ -11,7 +11,7 @@
  */
 
 #include "Window.hpp"
-#include "objects/Sphere.hpp"
+#include "objects/sphere.hpp"
 
 int main() {
   auto aspect_ratio = 16.0 / 9.0;
@@ -22,7 +22,7 @@ int main() {
   screen_height = (screen_height < 1) ? 1 : screen_height;
 
   // World
-  ObjectsList world;
+  hittable_list world;
 
   TraceLog(LOG_INFO, "Creating MATERIALS");
   auto material_ground = make_shared<lambertian>(vec3(.8f, .8f, .0f));
@@ -32,10 +32,13 @@ int main() {
 
   TraceLog(LOG_INFO, "Creating OBJECTS");
   world.add(
-      make_shared<Sphere>(vec3(.0f, -100.5f, -1.0f), 100.0f, material_ground));
-  world.add(make_shared<Sphere>(vec3(.0f, .0f, -1.2f), .5f, material_center));
-  world.add(make_shared<Sphere>(vec3(-1.0f, .0f, -1.0f), .5f, material_left));
-  world.add(make_shared<Sphere>(vec3(1.0f, .0f, -1.0f), .5f, material_right));
+      make_shared<sphere>(vec3(.0f, -100.5f, -1.0f), 100.0f, material_ground));
+  world.add(make_shared<sphere>(vec3(.0f, .0f, -1.2f), .5f, material_center));
+  world.add(make_shared<sphere>(vec3(-1.0f, .0f, -1.0f), .5f, material_left));
+  world.add(make_shared<sphere>(vec3(1.0f, .0f, -1.0f), .5f, material_right));
+
+  TraceLog(LOG_INFO, "Creating BVH");
+  world = hittable_list(make_shared<bvh_node>(world));
 
   RaytraceWindow window =
       RaytraceWindow(screen_width, screen_height, "First Ray Perspective");

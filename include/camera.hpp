@@ -12,7 +12,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "objects/ObjectsList.hpp"
+#include "objects/hittable_list.hpp"
 
 Color vec3_to_color(const vec3& v);
 
@@ -57,12 +57,12 @@ class camera {
    *
    * @return vec3 The color of the pixel that the ray intersects with
    */
-  vec3 send_ray(ObjectsList* world, const float pixel_width,
+  vec3 send_ray(hittable_list* world, const float pixel_width,
                 const float pixel_height);
 
   float aspect_ratio = 1.0;  // Ratio of image width over height
-  int screen_width = 100;     // Rendered image width in pixel count
-  bool is_moving = false;     // Camera movement flag
+  int screen_width = 100;    // Rendered image width in pixel count
+  bool is_moving = false;    // Camera movement flag
 
   /**
    * @brief Updates the position of the camera
@@ -117,7 +117,7 @@ class camera {
    *
    * @return vec3 The color of the pixel that the ray intersects with
    */
-  vec3 ray_color(ray& r, ObjectsList* world, const size_t depth = 1);
+  vec3 ray_color(ray& r, hittable_list* world, const size_t depth = 1);
 
   /**
    * @brief Function that updates the camera's orientation based on the

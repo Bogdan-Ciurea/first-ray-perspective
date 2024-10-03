@@ -1,7 +1,7 @@
 /**
- * @file Sphere.hpp
+ * @file sphere.hpp
  * @author Bogdan Ciurea (ciureabogdanalexandru@gmail.com)
- * @brief Declaration of the Sphere class
+ * @brief Declaration of the sphere class
  * @version 0.1
  * @date 2024-04-20
  *
@@ -12,25 +12,25 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
-#include "Object.hpp"
+#include "hittable.hpp"
 
-class Sphere : public Object {
+class sphere : public hittable {
  public:
   /**
-   * @brief Construct a new Sphere object
+   * @brief Construct a new sphere object
    *
    * @param center The center of the sphere
    * @param radius The radius of the sphere
    * @param material The material of the sphere
    */
-  Sphere(const vec3& center, float radius,
+  sphere(const vec3& center, float radius,
          const std::shared_ptr<material> material);
 
   /**
-   * @brief Destroy the Sphere object
+   * @brief Destroy the sphere object
    *
    */
-  ~Sphere();
+  ~sphere();
 
   /**
    * @brief Get the material of the sphere
@@ -57,26 +57,40 @@ class Sphere : public Object {
    * @brief Get the intersection of the sphere
    *
    * @param r The ray to intersect with
-   * @param t_min The minimum t value
-   * @param t_max The maximum t value
+   * @param interval The interval in which the intersection should be
    * @param rec The hit record
    * @return bool True if the ray intersects the sphere, false otherwise
    */
-  bool intersect(const ray& r, const float t_min, const float t_max,
-                 hit_record& rec);
+  bool hit(const ray& r, const interval& interval,
+           hit_record& rec) const override;
 
   /**
    * @brief Move the sphere by a given offset
    *
    * @param offset The offset to move the sphere by
    */
-  void move(const vec3& offset) { center += offset; }
-  void rotate(const vec3& axis, float angle) {}
+  void move(const vec3& offset) override { center += offset; }
+
+  /**
+   * @brief Rotate the sphere by a given angle around a given axis
+   *
+   * @param axis The axis to rotate the sphere around
+   * @param angle The angle to rotate the sphere by
+   */
+  void rotate(const vec3& axis, float angle) override {}
+
+  /**
+   * @brief Get the bounding box of the sphere
+   *
+   * @return aabb The bounding box of the sphere
+   */
+  aabb bounding_box() const override { return bbox; }
 
  private:
   vec3 center;
   float radius;
   std::shared_ptr<material> mat;
+  aabb bbox;
 };
 
 #endif  // SPHERE_HPP

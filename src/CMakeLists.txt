@@ -1,8 +1,11 @@
 # Set the source files for the library
 set(SOURCE_FILES
   # Add more source files here
-  objects/ObjectsList.cpp
-  objects/Sphere.cpp
+  math/interval.cpp
+  
+  objects/aabb.cpp
+  objects/hittable_list.cpp
+  objects/sphere.cpp
 
   ray.cpp
   camera.cpp

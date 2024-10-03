@@ -47,11 +47,14 @@ const float infinity = std::numeric_limits<float>::infinity();
 
 // Utility Functions
 
+// Returns a random real in [0,1).
 inline float random_float(float min = 0, float max = 1) {
-  // Returns a random real in [0,1).
   const float rand = (float)GetRandomValue(0, 1000) / 1000.0f;
   return min + (max - min) * rand;
 }
+
+// Returns a random integer in [min,max].
+inline int random_int(int min, int max) { return GetRandomValue(min, max); }
 
 inline float clamp(float x, float min, float max) {
   if (x < min) return min;
