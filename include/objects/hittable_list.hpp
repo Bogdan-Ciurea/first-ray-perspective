@@ -39,13 +39,6 @@ class hittable_list : public hittable {
   void clear();
 
   /**
-   * @brief Get the list of objects
-   *
-   * @return std::vector<std::shared_ptr<hittable>> The list of objects
-   */
-  vector<shared_ptr<hittable>> get_objects();
-
-  /**
    * @brief Get the intersection of the objects in the list
    *
    * @param r The ray to intersect with
@@ -62,8 +55,9 @@ class hittable_list : public hittable {
 
   aabb bounding_box() const override { return bbox; }
 
- private:
   vector<shared_ptr<hittable>> objects;
+
+ private:
   aabb bbox;
 };
 

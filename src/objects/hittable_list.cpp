@@ -22,10 +22,6 @@ void hittable_list::add(std::shared_ptr<hittable> object) {
 
 void hittable_list::clear() { objects.clear(); }
 
-std::vector<std::shared_ptr<hittable>> hittable_list::get_objects() {
-  return objects;
-}
-
 bool hittable_list::hit(const ray& r, const interval& interval,
                         hit_record& rec) const {
   hit_record temp_rec;
