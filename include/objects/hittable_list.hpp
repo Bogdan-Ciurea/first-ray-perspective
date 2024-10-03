@@ -21,6 +21,7 @@ class hittable_list : public hittable {
    *
    */
   hittable_list();
+  hittable_list(shared_ptr<hittable> object) { add(object); }
 
   /**
    * @brief Destroy the hittable_list object
