@@ -37,6 +37,9 @@ int main() {
   world.add(make_shared<sphere>(vec3(-1.0f, .0f, -1.0f), .5f, material_left));
   world.add(make_shared<sphere>(vec3(1.0f, .0f, -1.0f), .5f, material_right));
 
+  TraceLog(LOG_INFO, "Creating BVH");
+  bvh_node bvh_world = bvh_node(world);
+
   RaytraceWindow window =
       RaytraceWindow(screen_width, screen_height, "First Ray Perspective");
 

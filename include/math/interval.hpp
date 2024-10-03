@@ -13,7 +13,7 @@
 #ifndef INTERVAL_HPP
 #define INTERVAL_HPP
 
-#include <utils.hpp>
+#include "utils.hpp"
 
 class interval {
  public:
@@ -40,6 +40,8 @@ class interval {
   }
 
   float size() const { return max - min; }
+
+  static const interval empty, universe;
 };
 
 #endif

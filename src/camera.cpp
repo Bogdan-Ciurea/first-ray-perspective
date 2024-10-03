@@ -32,7 +32,7 @@ vec3 camera::ray_color(ray& r, hittable_list* world, const size_t depth) {
   }
 
   hit_record rec;
-  if (world->intersect(r, interval(.0001f, infinity), rec)) {
+  if (world->hit(r, interval(.0001f, infinity), rec)) {
     ray scattered;
     vec3 attenuation;
     // If the ray scatters, recursively call the function

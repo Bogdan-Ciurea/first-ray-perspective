@@ -61,15 +61,23 @@ class sphere : public hittable {
    * @param rec The hit record
    * @return bool True if the ray intersects the sphere, false otherwise
    */
-  bool intersect(const ray& r, const interval& interval, hit_record& rec);
+  bool hit(const ray& r, const interval& interval,
+           hit_record& rec) const override;
 
   /**
    * @brief Move the sphere by a given offset
    *
    * @param offset The offset to move the sphere by
    */
-  void move(const vec3& offset) { center += offset; }
-  void rotate(const vec3& axis, float angle) {}
+  void move(const vec3& offset) override { center += offset; }
+
+  /**
+   * @brief Rotate the sphere by a given angle around a given axis
+   *
+   * @param axis The axis to rotate the sphere around
+   * @param angle The angle to rotate the sphere by
+   */
+  void rotate(const vec3& axis, float angle) override {}
 
   /**
    * @brief Get the bounding box of the sphere

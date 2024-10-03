@@ -1,6 +1,9 @@
 # Set the source files for the library
 set(SOURCE_FILES
   # Add more source files here
+  math/interval.cpp
+  
+  objects/aabb.cpp
   objects/hittable_list.cpp
   objects/sphere.cpp
 

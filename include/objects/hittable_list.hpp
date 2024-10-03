@@ -53,10 +53,11 @@ class hittable_list : public hittable {
    * @return bool True if the ray intersects any object in the list, false
    * otherwise
    */
-  bool intersect(const ray& r, const interval& interval, hit_record& rec);
+  bool hit(const ray& r, const interval& interval,
+           hit_record& rec) const override;
 
-  void move(const vec3& offset);
-  void rotate(const vec3& axis, float angle);
+  void move(const vec3& offset) override;
+  void rotate(const vec3& axis, float angle) override;
 
   aabb bounding_box() const override { return bbox; }
 

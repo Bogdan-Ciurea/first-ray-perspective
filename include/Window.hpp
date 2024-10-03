@@ -15,7 +15,7 @@
 #include <omp.h>
 
 #include "camera.hpp"
-#include "objects/hittable_list.hpp"
+#include "objects/bvh.hpp"
 
 class RaytraceWindow {
  public:

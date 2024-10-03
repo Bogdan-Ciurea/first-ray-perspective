@@ -24,8 +24,8 @@ vec3 sphere::get_center() { return center; }
 
 float sphere::get_radius() { return radius; }
 
-bool sphere::intersect(const ray& r, const interval& interval,
-                       hit_record& rec) {
+bool sphere::hit(const ray& r, const interval& interval,
+                 hit_record& rec) const {
   vec3 oc = r.origin() - center;
   float a = dot(r.direction(), r.direction());
   float b = dot(oc, r.direction());

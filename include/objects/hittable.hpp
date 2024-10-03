@@ -19,16 +19,6 @@
 
 class hittable {
  public:
-  /**
-   * @brief Construct a new hittable object
-   *
-   */
-  hittable() = default;
-
-  /**
-   * @brief Destroy the hittable object
-   *
-   */
   virtual ~hittable() = default;
 
   /**
@@ -39,13 +29,18 @@ class hittable {
    * @param rec The hit record
    * @return bool True if the ray intersects the object, false otherwise
    */
-  virtual bool intersect(const ray& r, const interval& interval,
-                         hit_record& rec) = 0;
+  virtual bool hit(const ray& r, const interval& interval,
+                   hit_record& rec) const = 0;
+
+  /**
+   * @brief Getter for the object's bounding box
+   *
+   * @return aabb The bounding box of the object
+   */
+  virtual aabb bounding_box() const = 0;
 
   virtual void move(const vec3& offset) = 0;
   virtual void rotate(const vec3& axis, float angle) = 0;
-
-  virtual aabb bounding_box() const = 0;
 };
 
 #endif  // OBJECT_HPP
