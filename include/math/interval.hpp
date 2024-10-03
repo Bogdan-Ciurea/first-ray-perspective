@@ -21,6 +21,11 @@ class interval {
 
   interval() : min(-infinity), max(+infinity) {}
   interval(float min, float max) : min(min), max(max) {}
+  interval(const interval& a, const interval& b) {
+    // Create the interval tightly enclosing the two input intervals.
+    min = a.min <= b.min ? a.min : b.min;
+    max = a.max >= b.max ? a.max : b.max;
+  }
 
   bool contains(float x) const { return x >= min && x <= max; }
   bool contains(const interval& i) const {

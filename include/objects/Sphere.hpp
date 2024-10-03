@@ -1,7 +1,7 @@
 /**
- * @file Sphere.hpp
+ * @file sphere.hpp
  * @author Bogdan Ciurea (ciureabogdanalexandru@gmail.com)
- * @brief Declaration of the Sphere class
+ * @brief Declaration of the sphere class
  * @version 0.1
  * @date 2024-04-20
  *
@@ -12,25 +12,25 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
-#include "Object.hpp"
+#include "hittable.hpp"
 
-class Sphere : public Object {
+class sphere : public hittable {
  public:
   /**
-   * @brief Construct a new Sphere object
+   * @brief Construct a new sphere object
    *
    * @param center The center of the sphere
    * @param radius The radius of the sphere
    * @param material The material of the sphere
    */
-  Sphere(const vec3& center, float radius,
+  sphere(const vec3& center, float radius,
          const std::shared_ptr<material> material);
 
   /**
-   * @brief Destroy the Sphere object
+   * @brief Destroy the sphere object
    *
    */
-  ~Sphere();
+  ~sphere();
 
   /**
    * @brief Get the material of the sphere
@@ -71,10 +71,18 @@ class Sphere : public Object {
   void move(const vec3& offset) { center += offset; }
   void rotate(const vec3& axis, float angle) {}
 
+  /**
+   * @brief Get the bounding box of the sphere
+   *
+   * @return aabb The bounding box of the sphere
+   */
+  aabb bounding_box() const override { return bbox; }
+
  private:
   vec3 center;
   float radius;
   std::shared_ptr<material> mat;
+  aabb bbox;
 };
 
 #endif  // SPHERE_HPP

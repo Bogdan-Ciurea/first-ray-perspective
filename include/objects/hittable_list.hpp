@@ -1,7 +1,7 @@
 /**
- * @file ObjectsList.hpp
+ * @file hittable_list.hpp
  * @author Bogdan Ciurea (ciureabogdanalexandru@gmail.com)
- * @brief Declaration of the ObjectsList class
+ * @brief Declaration of the hittable_list class
  * @version 0.1
  * @date 2024-04-26
  *
@@ -12,37 +12,37 @@
 #ifndef OBJECTSLIST_HPP
 #define OBJECTSLIST_HPP
 
-#include "Object.hpp"
+#include "hittable.hpp"
 
-class ObjectsList : public Object {
+class hittable_list : public hittable {
  public:
   /**
-   * @brief Construct a new ObjectsList object
+   * @brief Construct a new hittable_list object
    *
    */
-  ObjectsList();
+  hittable_list();
 
   /**
-   * @brief Destroy the ObjectsList object
+   * @brief Destroy the hittable_list object
    *
    */
-  ~ObjectsList();
+  ~hittable_list();
 
   /**
    * @brief Add an object to the list
    *
    * @param object The object to add
    */
-  void add(shared_ptr<Object> object);
+  void add(shared_ptr<hittable> object);
 
   void clear();
 
   /**
    * @brief Get the list of objects
    *
-   * @return std::vector<std::shared_ptr<Object>> The list of objects
+   * @return std::vector<std::shared_ptr<hittable>> The list of objects
    */
-  vector<shared_ptr<Object>> get_objects();
+  vector<shared_ptr<hittable>> get_objects();
 
   /**
    * @brief Get the intersection of the objects in the list
@@ -58,8 +58,11 @@ class ObjectsList : public Object {
   void move(const vec3& offset);
   void rotate(const vec3& axis, float angle);
 
+  aabb bounding_box() const override { return bbox; }
+
  private:
-  vector<shared_ptr<Object>> objects;
+  vector<shared_ptr<hittable>> objects;
+  aabb bbox;
 };
 
 #endif  // OBJECTSLIST_HPP

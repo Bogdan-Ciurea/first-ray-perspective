@@ -15,7 +15,7 @@ camera::camera(const int screen_width, const int screen_height,
   initialize();
 }
 
-vec3 camera::send_ray(ObjectsList* world, const float pixel_width,
+vec3 camera::send_ray(hittable_list* world, const float pixel_width,
                       const float pixel_height) {
   auto pixel_center = pixel00_loc + (pixel_width * pixel_delta_u) +
                       (pixel_height * pixel_delta_v);
@@ -26,13 +26,13 @@ vec3 camera::send_ray(ObjectsList* world, const float pixel_width,
   return ray_color(r, world, max_depth);
 }
 
-vec3 camera::ray_color(ray& r, ObjectsList* world, const size_t depth) {
+vec3 camera::ray_color(ray& r, hittable_list* world, const size_t depth) {
   if (depth <= 0) {
     return vec3(0, 0, 0);
   }
 
   hit_record rec;
-  if (world->intersect(r, interval(.0f, infinity), rec)) {
+  if (world->intersect(r, interval(.0001f, infinity), rec)) {
     ray scattered;
     vec3 attenuation;
     // If the ray scatters, recursively call the function

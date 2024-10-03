@@ -1,7 +1,7 @@
 /**
- * @file Object.hpp
+ * @file hittable.hpp
  * @author Bogdan Ciurea (ciureabogdanalexandru@gmail.com)
- * @brief This file contains the declaration of the Object class that will be
+ * @brief This file contains the declaration of the hittable class that will be
  * the base class for all objects in the scene
  * @version 0.1
  * @date 2024-04-20
@@ -13,22 +13,23 @@
 #ifndef OBJECT_HPP
 #define OBJECT_HPP
 
+#include "aabb.hpp"
 #include "material.hpp"
 #include "math/interval.hpp"
 
-class Object {
+class hittable {
  public:
   /**
-   * @brief Construct a new Object object
+   * @brief Construct a new hittable object
    *
    */
-  Object() = default;
+  hittable() = default;
 
   /**
-   * @brief Destroy the Object object
+   * @brief Destroy the hittable object
    *
    */
-  virtual ~Object() = default;
+  virtual ~hittable() = default;
 
   /**
    * @brief Get the object's intersection
@@ -43,6 +44,8 @@ class Object {
 
   virtual void move(const vec3& offset) = 0;
   virtual void rotate(const vec3& axis, float angle) = 0;
+
+  virtual aabb bounding_box() const = 0;
 };
 
 #endif  // OBJECT_HPP

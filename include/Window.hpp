@@ -15,7 +15,7 @@
 #include <omp.h>
 
 #include "camera.hpp"
-#include "objects/ObjectsList.hpp"
+#include "objects/hittable_list.hpp"
 
 class RaytraceWindow {
  public:
@@ -25,20 +25,20 @@ class RaytraceWindow {
   ~RaytraceWindow();
 
   void draw();
-  void set_world(ObjectsList* world) { this->world = world; }
+  void set_world(hittable_list* world) { this->world = world; }
 
  private:
   int current_renders = 0;
   int max_renders = 100;
   uint target_fps = 30;
   int start_index = 0;  // The starting index for the next selection (when
-                           // selecting random colors)
+                        // selecting random colors)
 
-  const int screen_width;      // The dimensions of the window
-  const int screen_height;     // The dimensions of the window
-  ObjectsList* world;          // The world that we are going to draw
-  camera cam;                  // The camera object
-  std::vector<Color> pixels;   // The array of pixels that we are going to draw
+  const int screen_width;     // The dimensions of the window
+  const int screen_height;    // The dimensions of the window
+  hittable_list* world;       // The world that we are going to draw
+  camera cam;                 // The camera object
+  std::vector<Color> pixels;  // The array of pixels that we are going to draw
   Texture2D texture;  // The texture that we are going to draw (DrawPixel method
                       // is not efficient for large images)
 
