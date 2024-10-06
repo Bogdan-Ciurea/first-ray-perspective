@@ -66,7 +66,9 @@ class hit_record {
  public:
   vec3 p;           // Point of intersection
   vec3 normal;      // Normal at the intersection point
-  float t;         // Distance from the ray origin
+  float t;          // Distance from the ray origin
+  float u;          // U coordinate of the texture
+  float v;          // V coordinate of the texture
   bool front_face;  // True if the ray intersects the front face of the object
   std::shared_ptr<material> mat_ptr;  // Material of the object that was hit
 

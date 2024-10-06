@@ -57,3 +57,5 @@ AND BUILD_TESTING)
   add_subdirectory(tests)
 endif()
 
+# Copy the assets to the build directory
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets/images DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

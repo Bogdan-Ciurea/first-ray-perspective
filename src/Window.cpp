@@ -13,8 +13,8 @@
 
 #include <chrono>
 
-RaytraceWindow::RaytraceWindow(const int screen_width,
-                               const int screen_height, const char* title)
+RaytraceWindow::RaytraceWindow(const int screen_width, const int screen_height,
+                               const char* title)
     : screen_width(screen_width), screen_height(screen_height) {
   InitWindow(screen_width, screen_height, title);
   SetTargetFPS(target_fps);
@@ -74,9 +74,9 @@ void RaytraceWindow::draw() {
               : start_index + rays_to_send;
       // Calculate each pixel color
       // If we are using OpenMP, we can parallelize the loop
-#ifdef USE_OPENMP
-#pragma omp parallel for schedule(dynamic)
-#endif
+      // #ifdef USE_OPENMP
+      // #pragma omp parallel for schedule(dynamic)
+      // #endif
       for (int f = start_index; f < end_index; f++) {
         const int index = shuffled_index_array[f];
         float j = index / screen_width + random_float() - 0.5f;
