@@ -21,9 +21,11 @@
 hittable_list three_spheres() {
   hittable_list world;
 
-  TraceLog(LOG_INFO, "Creating MATERIALS");
+  TraceLog(LOG_INFO, "Loading TEXTURES");
   auto material_ground = make_shared<checker_texture>(
       0.32f, vec3(.2f, .3f, .1f), vec3(.9f, .9f, .9f));
+
+  TraceLog(LOG_INFO, "Creating MATERIALS");
   auto material_center = make_shared<lambertian>(vec3(.1f, .2f, .5f));
   auto material_left = make_shared<dielectric>(1.0f / 1.5168f);
   auto material_right = make_shared<metal>(vec3(.8f, .6f, 0.2f), .5f);
@@ -39,7 +41,25 @@ hittable_list three_spheres() {
   return hittable_list(make_shared<bvh_node>(world));
 }
 
+hittable_list earth() {
+  hittable_list world;
+
+  TraceLog(LOG_INFO, "Loading TEXTURES");
+  auto earth_texture = make_shared<image_texture>("earthmap.png");
+
+  TraceLog(LOG_INFO, "Creating MATERIALS");
+  auto earth_surface = make_shared<lambertian>(earth_texture);
+
+  TraceLog(LOG_INFO, "Creating OBJECTS");
+  auto globe = make_shared<sphere>(vec3(.0f, .0f, -4.f), 2.f, earth_surface);
+
+  world.add(globe);
+
+  return world;
+}
+
 int main() {
+  SetTraceLogLevel(LOG_DEBUG);
   auto aspect_ratio = 16.0 / 9.0;
   int screen_width = 1000;
 
@@ -53,9 +73,12 @@ int main() {
   // World
   hittable_list world;
 
-  switch (1) {
+  switch (2) {
     case 1:
       world = three_spheres();
+      break;
+    case 2:
+      world = earth();
       break;
     default:
       break;

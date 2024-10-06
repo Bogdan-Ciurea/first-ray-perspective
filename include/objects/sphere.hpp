@@ -91,6 +91,16 @@ class sphere : public hittable {
   float radius;
   std::shared_ptr<material> mat;
   aabb bbox;
+
+  /**
+   * @brief  Function that calculates the UV coordinates of a point on the
+   * sphere
+   *
+   * @param p a point on the unit sphere
+   * @param u the angle around the y-axis from the x-axis
+   * @param v the angle from the y-axis
+   */
+  static void get_sphere_uv(const vec3& p, float& u, float& v);
 };
 
 #endif  // SPHERE_HPP

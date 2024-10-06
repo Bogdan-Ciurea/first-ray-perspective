@@ -26,6 +26,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "external/stb_image.h"
 #include "raylib.h"
 
 // C++ Std Usings
@@ -36,7 +37,10 @@ using std::sqrt;
 using std::vector;
 using Secondsf = std::chrono::duration<float, std::ratio<1>>;
 using Clock = std::chrono::steady_clock;
-// auto now = std::chrono::high_resolution_clock::now();
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846264f  // from CRC
+#endif
 
 // Defining aliases
 typedef unsigned int uint;

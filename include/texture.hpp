@@ -14,6 +14,7 @@
 
 #include "math/vec3.hpp"
 #include "raylib.h"
+#include "rtw_stb_image.hpp"
 
 class texture {
  public:
@@ -59,6 +60,35 @@ class checker_texture : public texture {
   float inv_scale;
   shared_ptr<texture> even;
   shared_ptr<texture> odd;
+};
+
+class image_texture : public texture {
+ public:
+  image_texture(const char* filename) : image(filename) {}
+
+  vec3 value(float u, float v, const vec3& p) const override {
+    // If there is no image data, return magenta.
+    if (image.width() == 0) return vec3(1, 0, 1);
+
+    // Clamp input texture coordinates to [0,1] x [1,0]
+    u = clamp(u, 0.0f, 1.0f);
+    v = 1.0f - clamp(v, 0.0f, 1.0f);  // Flip V to image coordinates
+
+    int i = static_cast<int>(u * image.width());
+    int j = static_cast<int>(v * image.height());
+
+    // Clamp integer mapping, since actual coordinates should be less than 1.0
+    if (i >= image.width()) i = image.width() - 1;
+    if (j >= image.height()) j = image.height() - 1;
+
+    const unsigned char* pixel = image.pixel_data(i, j);
+
+    // Normalize [0,255] -> [0,1]
+    return vec3(pixel[0], pixel[1], pixel[2]) / 255.0f;
+  }
+
+ private:
+  rtw_image image;
 };
 
 #endif  // TEXTURE_HPP
