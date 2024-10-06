@@ -13,6 +13,7 @@
 #define MATERIAL_H
 
 #include "ray.hpp"
+#include "texture.hpp"
 
 class material {
  public:
@@ -40,12 +41,8 @@ class material {
  */
 class lambertian : public material {
  public:
-  /**
-   * @brief Construct a new lambertian object
-   *
-   * @param a  The albedo (aka Color) of the material
-   */
-  lambertian(const vec3& a) : albedo(a) {}
+  lambertian(const vec3& albedo) : tex(make_shared<solid_color>(albedo)) {}
+  lambertian(shared_ptr<texture> tex) : tex(tex) {}
 
   bool scatter(ray& r_in, const hit_record& rec, vec3& attenuation,
                ray& scattered) const override {
@@ -54,12 +51,12 @@ class lambertian : public material {
     if (scatter_direction.near_zero()) scatter_direction = rec.normal;
 
     scattered = ray(rec.p, scatter_direction);
-    attenuation = albedo;
+    attenuation = tex->value(rec.u, rec.v, rec.p);
     return true;
   }
 
  private:
-  vec3 albedo;
+  shared_ptr<texture> tex;
 };
 
 /**
@@ -105,7 +102,7 @@ class dielectric : public material {
 
   bool scatter(ray& r_in, const hit_record& rec, vec3& attenuation,
                ray& scattered) const override {
-    attenuation = vec3(1.0, 1.0, 1.0);
+    attenuation = vec3(1.0f, 1.0f, 1.0f);
     float ri = rec.front_face ? (1.0f / refraction_index) : refraction_index;
 
     scattered = r_in.refract(rec.normal, rec.p, ri);
