@@ -13,6 +13,7 @@
 #define TEXTURE_HPP
 
 #include "math/vec3.hpp"
+#include "perlin.hpp"
 #include "raylib.h"
 #include "rtw_stb_image.hpp"
 
@@ -89,6 +90,21 @@ class image_texture : public texture {
 
  private:
   rtw_image image;
+};
+
+class noise_texture : public texture {
+ public:
+  noise_texture() {}
+  noise_texture(float _scale) : noise(), scale(_scale) {}
+
+  vec3 value(float u, float v, const vec3& p) const override {
+    return vec3(.5f, .5f, .5f) *
+           (1 + std::sin(scale * p.z() + 10 * noise.turb(p, 7)));
+  }
+
+ private:
+  perlin noise;
+  float scale;
 };
 
 #endif  // TEXTURE_HPP
