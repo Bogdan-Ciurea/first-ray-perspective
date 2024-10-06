@@ -41,6 +41,9 @@ hittable_list three_spheres() {
   return hittable_list(make_shared<bvh_node>(world));
 }
 
+/**
+ * @brief Scene containing a sphere with an earth texture
+ */
 hittable_list earth() {
   hittable_list world;
 
@@ -54,6 +57,19 @@ hittable_list earth() {
   auto globe = make_shared<sphere>(vec3(.0f, .0f, -4.f), 2.f, earth_surface);
 
   world.add(globe);
+
+  return world;
+}
+
+hittable_list perlin_spheres() {
+  hittable_list world;
+
+  auto perlin_texture = make_shared<noise_texture>(4.f);
+  auto perlin_surface = make_shared<lambertian>(perlin_texture);
+
+  world.add(
+      make_shared<sphere>(vec3(0.f, -1000.f, 0.f), 1000.f, perlin_surface));
+  world.add(make_shared<sphere>(vec3(.0f, 2.f, -1.f), 2.f, perlin_surface));
 
   return world;
 }
@@ -73,12 +89,15 @@ int main() {
   // World
   hittable_list world;
 
-  switch (2) {
+  switch (3) {
     case 1:
       world = three_spheres();
       break;
     case 2:
       world = earth();
+      break;
+    case 3:
+      world = perlin_spheres();
       break;
     default:
       break;
