@@ -6,6 +6,7 @@ set(SOURCE_FILES
   objects/aabb.cpp
   objects/hittable_list.cpp
   objects/sphere.cpp
+  objects/quad.cpp
 
   ray.cpp
   camera.cpp
