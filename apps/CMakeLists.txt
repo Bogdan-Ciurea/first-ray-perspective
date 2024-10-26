@@ -9,6 +9,8 @@ foreach(APP_SRC ${APP_SOURCES})
     # Create executable for the source file
     add_executable(${APP_NAME} ${APP_SRC})
 
+    target_include_directories(${APP_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/constructions)
+
     # Set the C++ standard
     target_compile_features(${APP_NAME} PRIVATE cxx_std_14)
 

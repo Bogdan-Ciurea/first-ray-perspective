@@ -10,9 +10,8 @@
  *
  */
 
-#include "Window.hpp"
-#include "objects/quad.hpp"
-#include "objects/sphere.hpp"
+#include "constructions/box.hpp"
+#include "constructions/cornell_box.hpp"
 
 /**
  * @brief Scene containing three spheres and a ground.
@@ -85,7 +84,6 @@ hittable_list perlin_spheres(shared_ptr<camera> cam) {
 hittable_list coloured_box(shared_ptr<camera> cam) {
   hittable_list world;
   cam->background_color = vec3(0.7f, 0.8f, 1.0f);
-  cam->movement_per_second = 10.0f;
 
   // Materials
   TraceLog(LOG_INFO, "Creating MATERIALS");
@@ -112,45 +110,34 @@ hittable_list coloured_box(shared_ptr<camera> cam) {
   return hittable_list(make_shared<bvh_node>(world));
 }
 
-/**
- * @brief function that creates a cornell box
- * NOTE: The function does not create a BVH node
- *
- * @return hittable_list The list of objects in the scene
- */
-hittable_list cornell_box() {
-  hittable_list world;
+hittable_list cornell_with_boxes(shared_ptr<camera> cam) {
+  auto world = cornell_box(cam, 100);
 
   // Materials
   TraceLog(LOG_INFO, "Creating MATERIALS");
-  auto ivory = make_shared<lambertian>(vec3(0.4f, 0.4f, 0.3f));
-  auto red_rubber = make_shared<lambertian>(vec3(0.3f, 0.1f, 0.1f));
-  auto green_rubber = make_shared<lambertian>(vec3(0.3f, 0.4f, 0.1f));
-  auto light = make_shared<diffuse_light>(vec3(15.f, 15.f, 15.f));
+  auto red = make_shared<lambertian>(vec3(.65f, .05f, .05f));
+  auto blue_metal = make_shared<metal>(vec3(.7f, .6f, .5f), 0.1f);
+  auto glass = make_shared<dielectric>(1.0f / 1.5168f);
 
   // Quads
   TraceLog(LOG_INFO, "Creating OBJECTS");
-  // Left wall (100 units wide)
-  world.add(make_shared<quad>(vec3(-50, -50, -50), vec3(0, 0, -100),
-                              vec3(0, 100, 0), red_rubber));
-  // Back wall (100 units wide)
-  world.add(make_shared<quad>(vec3(-50, -50, -150), vec3(100, 0, 0),
-                              vec3(0, 100, 0), ivory));
-  // Right wall (100 units wide)
-  world.add(make_shared<quad>(vec3(50, -50, -150), vec3(0, 0, 100),
-                              vec3(0, 100, 0), green_rubber));
-  // Ceiling (100 units wide)
-  world.add(make_shared<quad>(vec3(-50, 50, -150), vec3(100, 0, 0),
-                              vec3(0, 0, 100), ivory));
-  // Light (as a 50x50 centered square on the ceiling)
-  world.add(make_shared<quad>(vec3(-25, 49.99, -125), vec3(50, 0, 0),
-                              vec3(0, 0, 50),
-                              light));  // Centered light source
-  // Floor (100 units wide)
-  world.add(make_shared<quad>(vec3(-50, -50, -50), vec3(100, 0, 0),
-                              vec3(0, 0, -100), ivory));
+  // Left box - larger and positioned at back-left
+  world.add(box(vec3(-40, -50, -130),  // Point a
+                vec3(-20, 0, -110),    // Point b
+                red));                 // Using red
 
-  return world;
+  // Sphere - now in middle position
+  world.add(make_shared<sphere>(vec3(0, -25, -100),  // Center position
+                                20,                  // Radius
+                                glass));             // Using glass material
+
+  // Right box - smaller and positioned at front-right
+  world.add(box(vec3(20, -50, -80),  // Point a
+                vec3(40, -10, -60),  // Point b
+                blue_metal));        // Using blue_metal material
+
+  TraceLog(LOG_INFO, "Creating BVH");
+  return hittable_list(make_shared<bvh_node>(world));
 }
 
 int main() {
@@ -184,7 +171,7 @@ int main() {
       world = coloured_box(cam);
       break;
     case 5:
-      world = cornell_box();
+      world = cornell_with_boxes(cam);
       break;
     default:
       break;
