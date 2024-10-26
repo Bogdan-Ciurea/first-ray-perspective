@@ -72,11 +72,11 @@ void RaytraceWindow::draw() {
           start_index + rays_to_send >= shuffled_index_array.size()
               ? (int)shuffled_index_array.size()
               : start_index + rays_to_send;
-      // Calculate each pixel color
-      // If we are using OpenMP, we can parallelize the loop
-      // #ifdef USE_OPENMP
-      // #pragma omp parallel for schedule(dynamic)
-      // #endif
+// Calculate each pixel color
+// If we are using OpenMP, we can parallelize the loop
+#ifdef USE_OPENMP
+#pragma omp parallel for schedule(dynamic)
+#endif
       for (int f = start_index; f < end_index; f++) {
         const int index = shuffled_index_array[f];
         float j = index / screen_width + random_float() - 0.5f;
