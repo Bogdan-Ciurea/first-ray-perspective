@@ -14,8 +14,8 @@
 #include <chrono>
 
 RaytraceWindow::RaytraceWindow(const int screen_width, const int screen_height,
-                               const char* title)
-    : screen_width(screen_width), screen_height(screen_height) {
+                               const char* title, const shared_ptr<camera> cam)
+    : screen_width(screen_width), screen_height(screen_height), cam(cam) {
   InitWindow(screen_width, screen_height, title);
   SetTargetFPS(target_fps);
 
@@ -24,13 +24,9 @@ RaytraceWindow::RaytraceWindow(const int screen_width, const int screen_height,
   shuffle_indices(shuffled_index_array, 0);
 
   reset_pixels();
-  cam = camera(screen_width, screen_height, 10);
 }
 
-RaytraceWindow::~RaytraceWindow() {
-  CloseWindow();
-  cam.~camera();
-}
+RaytraceWindow::~RaytraceWindow() { CloseWindow(); }
 
 void RaytraceWindow::draw() {
   auto last = Clock::now();
@@ -44,11 +40,11 @@ void RaytraceWindow::draw() {
     last = now;
 
     // Activate or deactivate camera movement using the space key
-    if (IsKeyPressed(KEY_SPACE)) cam.is_moving = !cam.is_moving;
+    if (IsKeyPressed(KEY_SPACE)) cam->is_moving = !cam->is_moving;
     if (IsKeyPressed(KEY_R)) reset_pixels();
     if (IsKeyPressed(KEY_P)) TakeScreenshot("screenshot.png");
 
-    if (cam.update_state(dt)) reset_pixels();
+    if (cam->update_state(dt)) reset_pixels();
 
     int rays_to_send = 0;
     {
@@ -82,7 +78,7 @@ void RaytraceWindow::draw() {
         float j = index / screen_width + random_float() - 0.5f;
         float i = index % screen_width + random_float() - 0.5f;
 
-        vec3 color = cam.send_ray(world, i, j);
+        vec3 color = cam->send_ray(world, i, j);
 
         // We already calculate everything in float, so we just do gamma
         // correction before putting it integer format
@@ -160,8 +156,8 @@ void RaytraceWindow::reset_pixels() {
 
 float RaytraceWindow::get_ray_random_duration() {
   auto start_time = Clock::now();
-  cam.send_ray(world, (float)GetRandomValue(0, screen_width),
-               (float)GetRandomValue(0, screen_height));
+  cam->send_ray(world, (float)GetRandomValue(0, screen_width),
+                (float)GetRandomValue(0, screen_height));
   return std::chrono::duration_cast<Secondsf>(Clock::now() - start_time)
       .count();
 }

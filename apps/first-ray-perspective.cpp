@@ -19,8 +19,9 @@
  * The spheres are a dielectric, a metal, and a lambertian material.
  * The ground is a checker texture.
  */
-hittable_list three_spheres() {
+hittable_list three_spheres(shared_ptr<camera> cam) {
   hittable_list world;
+  cam->background_color = vec3(0.7f, 0.8f, 1.0f);
 
   TraceLog(LOG_INFO, "Loading TEXTURES");
   auto material_ground = make_shared<checker_texture>(
@@ -45,8 +46,9 @@ hittable_list three_spheres() {
 /**
  * @brief Scene containing a sphere with an earth texture
  */
-hittable_list earth() {
+hittable_list earth(shared_ptr<camera> cam) {
   hittable_list world;
+  cam->background_color = vec3(0.7f, 0.8f, 1.0f);
 
   TraceLog(LOG_INFO, "Loading TEXTURES");
   auto earth_texture = make_shared<image_texture>("earthmap.png");
@@ -63,8 +65,9 @@ hittable_list earth() {
   return hittable_list(make_shared<bvh_node>(world));
 }
 
-hittable_list perlin_spheres() {
+hittable_list perlin_spheres(shared_ptr<camera> cam) {
   hittable_list world;
+  cam->background_color = vec3(0.7f, 0.8f, 1.0f);
 
   TraceLog(LOG_INFO, "Creating MATERIALS");
   auto perlin_texture = make_shared<noise_texture>(4.f);
@@ -79,8 +82,10 @@ hittable_list perlin_spheres() {
   return hittable_list(make_shared<bvh_node>(world));
 }
 
-hittable_list coloured_box() {
+hittable_list coloured_box(shared_ptr<camera> cam) {
   hittable_list world;
+  cam->background_color = vec3(0.7f, 0.8f, 1.0f);
+  cam->movement_per_second = 10.0f;
 
   // Materials
   TraceLog(LOG_INFO, "Creating MATERIALS");
@@ -121,19 +126,29 @@ hittable_list cornell_box() {
   auto ivory = make_shared<lambertian>(vec3(0.4f, 0.4f, 0.3f));
   auto red_rubber = make_shared<lambertian>(vec3(0.3f, 0.1f, 0.1f));
   auto green_rubber = make_shared<lambertian>(vec3(0.3f, 0.4f, 0.1f));
+  auto light = make_shared<diffuse_light>(vec3(15.f, 15.f, 15.f));
 
   // Quads
   TraceLog(LOG_INFO, "Creating OBJECTS");
-  world.add(make_shared<quad>(vec3(-2, -2, -3), vec3(0, 0, -4), vec3(0, 4, 0),
-                              red_rubber));
-  world.add(
-      make_shared<quad>(vec3(-2, -2, -7), vec3(4, 0, 0), vec3(0, 4, 0), ivory));
-  world.add(make_shared<quad>(vec3(2, -2, -7), vec3(0, 0, 4), vec3(0, 4, 0),
-                              green_rubber));
-  world.add(
-      make_shared<quad>(vec3(-2, 2, -7), vec3(4, 0, 0), vec3(0, 0, 4), ivory));
-  world.add(make_shared<quad>(vec3(-2, -2, -3), vec3(4, 0, 0), vec3(0, 0, -4),
-                              ivory));
+  // Left wall (100 units wide)
+  world.add(make_shared<quad>(vec3(-50, -50, -50), vec3(0, 0, -100),
+                              vec3(0, 100, 0), red_rubber));
+  // Back wall (100 units wide)
+  world.add(make_shared<quad>(vec3(-50, -50, -150), vec3(100, 0, 0),
+                              vec3(0, 100, 0), ivory));
+  // Right wall (100 units wide)
+  world.add(make_shared<quad>(vec3(50, -50, -150), vec3(0, 0, 100),
+                              vec3(0, 100, 0), green_rubber));
+  // Ceiling (100 units wide)
+  world.add(make_shared<quad>(vec3(-50, 50, -150), vec3(100, 0, 0),
+                              vec3(0, 0, 100), ivory));
+  // Light (as a 50x50 centered square on the ceiling)
+  world.add(make_shared<quad>(vec3(-25, 49.99, -125), vec3(50, 0, 0),
+                              vec3(0, 0, 50),
+                              light));  // Centered light source
+  // Floor (100 units wide)
+  world.add(make_shared<quad>(vec3(-50, -50, -50), vec3(100, 0, 0),
+                              vec3(0, 0, -100), ivory));
 
   return world;
 }
@@ -147,24 +162,26 @@ int main() {
   int screen_height = int(screen_width / aspect_ratio);
   screen_height = (screen_height < 1) ? 1 : screen_height;
 
+  shared_ptr<camera> cam = make_shared<camera>(screen_width, screen_height, 50);
+
   RaytraceWindow window =
-      RaytraceWindow(screen_width, screen_height, "First Ray Perspective");
+      RaytraceWindow(screen_width, screen_height, "First Ray Perspective", cam);
 
   // World
   hittable_list world;
 
   switch (5) {
     case 1:
-      world = three_spheres();
+      world = three_spheres(cam);
       break;
     case 2:
-      world = earth();
+      world = earth(cam);
       break;
     case 3:
-      world = perlin_spheres();
+      world = perlin_spheres(cam);
       break;
     case 4:
-      world = coloured_box();
+      world = coloured_box(cam);
       break;
     case 5:
       world = cornell_box();

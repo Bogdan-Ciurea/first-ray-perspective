@@ -60,9 +60,13 @@ class camera {
   vec3 send_ray(hittable_list* world, const float pixel_width,
                 const float pixel_height);
 
-  float aspect_ratio = 1.0;  // Ratio of image width over height
-  int screen_width = 100;    // Rendered image width in pixel count
-  bool is_moving = false;    // Camera movement flag
+  bool is_moving = false;            // Camera movement flag
+  int screen_width = 100;            // Rendered image width in pixel count
+  float aspect_ratio = 1.0;          // Ratio of image width over height
+  float movement_per_second = 1.0f;  // Camera movement speed
+  vec3 background_color = vec3(3e-3, 3e-3, 3e-3);  // Background color
+  vec3 camera_position = vec3(0, 0, 0);            // Camera center
+  vec3 look_at_point = vec3(0, 0, -1);             // Camera view direction
 
   /**
    * @brief Updates the position of the camera
@@ -81,21 +85,17 @@ class camera {
   vec3 pixel_delta_u;  // Offset to pixel to the right
   vec3 pixel_delta_v;  // Offset to pixel below
 
-  float vfov = 90;                       // Vertical view angle (field of view)
-  vec3 camera_position = vec3(0, 0, 0);  // Camera center
-  vec3 look_at_point = vec3(0, 0, -1);   // Camera view direction
-  vec3 vup = vec3(0, 1, 0);              // Camera up position
-  vec3 u, v, w;                          // Camera frame basis vectors
-  float yaw = -90.0f;                    // Camera yaw angle
-  float pitch = 0.0f;                    // Camera pitch angle
+  float vfov = 90;           // Vertical view angle (field of view)
+  vec3 vup = vec3(0, 1, 0);  // Camera up position
+  vec3 u, v, w;              // Camera frame basis vectors
+  float yaw = -90.0f;        // Camera yaw angle
+  float pitch = 0.0f;        // Camera pitch angle
 
   float defocus_angle = 0;  // Variation angle of rays through each pixel
   float focus_dist =
       10;  // Distance from camera lookfrom point to plane of perfect focus
   vec3 defocus_disk_u;  // Defocus disk u vector
   vec3 defocus_disk_v;  // Defocus disk v vector
-
-  float movement_per_second = 1.0f;  // Camera movement speed
 
   /**
    * @brief Function to initialize the camera's parameters based on the
@@ -117,7 +117,7 @@ class camera {
    *
    * @return vec3 The color of the pixel that the ray intersects with
    */
-  vec3 ray_color(ray& r, hittable_list* world, const size_t depth = 1);
+  vec3 ray_color(ray& r, hittable_list* world, const int depth = 1);
 
   /**
    * @brief Function that updates the camera's orientation based on the

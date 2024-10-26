@@ -19,6 +19,10 @@ class material {
  public:
   virtual ~material() = default;
 
+  virtual vec3 emitted(float u, float v, const vec3& p) const {
+    return vec3(0, 0, 0);
+  }
+
   /**
    * @brief Function that scatters the ray on the object
    *
@@ -113,6 +117,19 @@ class dielectric : public material {
   // Refractive index in vacuum or air, or the ratio of the material's
   // refractive index over the refractive index of the enclosing media
   float refraction_index;
+};
+
+class diffuse_light : public material {
+ public:
+  diffuse_light(shared_ptr<texture> tex) : tex(tex) {}
+  diffuse_light(const vec3& emit) : tex(make_shared<solid_color>(emit)) {}
+
+  vec3 emitted(float u, float v, const vec3& p) const {
+    return tex->value(u, v, p);
+  }
+
+ private:
+  shared_ptr<texture> tex;
 };
 
 #endif

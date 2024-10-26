@@ -26,26 +26,27 @@ vec3 camera::send_ray(hittable_list* world, const float pixel_width,
   return ray_color(r, world, max_depth);
 }
 
-vec3 camera::ray_color(ray& r, hittable_list* world, const size_t depth) {
+vec3 camera::ray_color(ray& r, hittable_list* world, const int depth) {
   if (depth <= 0) {
     return vec3(0, 0, 0);
   }
 
   hit_record rec;
-  if (world->hit(r, interval(.0001f, infinity), rec)) {
-    ray scattered;
-    vec3 attenuation;
-    // If the ray scatters, recursively call the function
-    if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-      return attenuation * ray_color(scattered, world, depth - 1);
 
-    // If the ray does not scatter, return black
-    vec3(0, 0, 0);
-  }
+  // If the ray hits nothing, return the background color.
+  if (!world->hit(r, interval(0.001, infinity), rec)) return background_color;
 
-  vec3 unit_direction = unit_vector(r.direction());
-  float t = 0.5f * (unit_direction.y() + 1.0f);
-  return (1.0f - t) * vec3(1.0f, 1.0f, 1.0f) + t * vec3(0.5f, 0.7f, 1.0f);
+  ray scattered;
+  vec3 attenuation;
+  vec3 color_from_emission = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+
+  if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+    return color_from_emission;
+
+  vec3 color_from_scatter =
+      attenuation * ray_color(scattered, world, depth - 1);
+
+  return color_from_emission + color_from_scatter;
 }
 
 void camera::initialize() {

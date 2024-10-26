@@ -20,7 +20,7 @@
 class RaytraceWindow {
  public:
   RaytraceWindow(const int screen_width, const int screen_height,
-                 const char* title);
+                 const char* title, const shared_ptr<camera> cam);
 
   ~RaytraceWindow();
 
@@ -37,7 +37,7 @@ class RaytraceWindow {
   const int screen_width;     // The dimensions of the window
   const int screen_height;    // The dimensions of the window
   hittable_list* world;       // The world that we are going to draw
-  camera cam;                 // The camera object
+  shared_ptr<camera> cam;     // The camera object
   std::vector<Color> pixels;  // The array of pixels that we are going to draw
   Texture2D texture;  // The texture that we are going to draw (DrawPixel method
                       // is not efficient for large images)
